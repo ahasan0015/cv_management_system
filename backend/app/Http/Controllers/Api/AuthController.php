@@ -11,27 +11,38 @@ use Nette\Schema\ValidationException;
 class AuthController extends Controller
 {
     public function login(Request $request)
-    {
+{
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
 
-    $user = User::where('email', $request->email)->first();
+    $user = User::with('role')->where('email', $request->email)->first();
 
     if (! $user || ! Hash::check($request->password, $user->password)) {
-        // JSON response
-        return response()->json([
-            'message' => 'Your email or Password invalid ।'
-        ], 401);
+        return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
+    // token generate
     $token = $user->createToken('auth_token')->plainTextToken;
 
     return response()->json([
-        'user' => $user,
-        'role' => $user->role ? $user->role->name : 'no-role',
-        'token' => $token
+        'token' => $token,
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'role' => $user->role->name
+        ]
     ]);
-    }
+}
+
+public function logout(Request $request)
+{
+    // বর্তমানে যে টোকেন দিয়ে রিকোয়েস্ট করা হয়েছে সেটি ডিলিট হবে
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'message' => 'Successfully logged out'
+    ], 200);
+}
 }
