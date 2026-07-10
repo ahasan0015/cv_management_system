@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../config/axios";
 import { useAuth } from "../hooks/useAuth";
+import Navbar from "../components/Navbar";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,11 +35,14 @@ const Login = () => {
         name: response.data.user.name,
       });
 
-      // redirect based on role
-      if (userRole === "candidate") {
-        navigate("/candidate-profile");
+      const normalizedRole = String(userRole).toLowerCase();
+
+      if (normalizedRole === "candidate") {
+        navigate("/candidate-profile", { replace: true });
+      } else if (normalizedRole === "recruiter") {
+        navigate("/recruiter-dashboard", { replace: true });
       } else {
-        navigate("/dashboard");
+        navigate("/admin-dashboard", { replace: true });
       }
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed.");
@@ -49,6 +53,7 @@ const Login = () => {
 
   return (
     <div className="container-fluid vh-100">
+      <Navbar/>
       <div className="row h-100">
         {/* Left Side */}
         <div className="col-lg-6 d-none d-lg-flex bg-primary text-white align-items-center justify-content-center">
@@ -140,13 +145,14 @@ const Login = () => {
                 <span className="text-muted">OR</span>
               </div>
 
-              {/* Social Login */}
-              <button
-                type="button"
-                className="btn btn-outline-danger w-100 mb-2"
+             
+              {/* Social Login - Updated Button */}
+              <a
+                href="http://localhost:8000/auth/google"
+                className="btn btn-outline-danger w-100 mb-2 text-decoration-none"
               >
                 <i className="bi bi-google me-2"></i> Continue with Google
-              </button>
+              </a>
               <button
                 type="button"
                 className="btn btn-outline-primary w-100 mb-2"

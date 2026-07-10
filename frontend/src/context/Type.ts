@@ -5,11 +5,13 @@ export interface User {
   role: Role;
   id: number;
   name: string;
+  avatar?: string;
+  email?: string;
 }
 
 export interface AuthContextType {
   user: User | null;
-  login: (userData: { token: string; role: number | string; id: number; name: string }) => void;
+  login: (userData: { token: string; role: number | string; id?: number; name?: string; avatar?: string; email?: string }) => void;
   logout: () => void;
   loading: boolean;
 }
