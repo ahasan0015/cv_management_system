@@ -3,20 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attribute extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'category_id', 'attribute_type_id', 'version'];
 
     public function category() {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(\App\Models\Category::class, 'category_id');
     }
 
-    public function attributeType(): BelongsTo
-    {
-        return $this->belongsTo(AttributeType::class);
+    public function attributeType() {
+        return $this->belongsTo(\App\Models\AttributeType::class, 'attribute_type_id');
     }
-
-    
 }

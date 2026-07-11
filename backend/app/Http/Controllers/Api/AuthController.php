@@ -38,7 +38,7 @@ class AuthController extends Controller
 
 public function logout(Request $request)
 {
-    // বর্তমানে যে টোকেন দিয়ে রিকোয়েস্ট করা হয়েছে সেটি ডিলিট হবে
+    // present token delete
     $request->user()->currentAccessToken()->delete();
 
     return response()->json([
