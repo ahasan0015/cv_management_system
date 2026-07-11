@@ -15,6 +15,12 @@ const AuthSuccess = () => {
     const token = searchParams.get("token");
     const role = searchParams.get("role")?.toLowerCase();
 
+    //   console.log("Google Data:", {
+    //   name: searchParams.get("name"),
+    //   avatar: searchParams.get("avatar"),
+    //   email: searchParams.get("email")
+    // });
+
     if (!token) {
       navigate("/login", { replace: true });
       return;
