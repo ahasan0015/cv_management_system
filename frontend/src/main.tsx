@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+
+
 // React Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -20,6 +22,10 @@ import CandidateProfile from "./pages/candidate/CandidateProfile";
 import AuthSuccess from "./pages/AuthSuccess";
 import RecruterDashboard from "./pages/recruiter/RecruterDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AttributePage from "./pages/AttributePage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 // Pages
 
@@ -39,7 +45,7 @@ const AppRoute = createBrowserRouter([
   },
   {
     element: <ProtectedRoute allowedRoles={["admin", "recruiter"]} />,
-    // children: [{ path: "/dashboard", element: <Dashboard /> }],
+    children: [{ path: "/attributes", element: <AttributePage /> }],
   },
   {
     element: <ProtectedRoute allowedRoles={["candidate"]} />,
@@ -48,7 +54,10 @@ const AppRoute = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
+  
+  <QueryClientProvider client={queryClient}>
   <AuthProvider>
     <RouterProvider router={AppRoute} />
-  </AuthProvider>,
+  </AuthProvider>
+  </QueryClientProvider>
 );
