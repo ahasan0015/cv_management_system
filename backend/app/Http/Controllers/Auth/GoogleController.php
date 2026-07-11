@@ -25,11 +25,21 @@ class GoogleController extends Controller
             'name' => $googleUser->name,
             'password' => Hash::make(uniqid()),
             'role_id' => $candidateRole?->id,
+            'avatar' => $googleUser->avatar, 
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
         $role = $user->role?->name ?? 'candidate';
 
-        return redirect("http://localhost:5173/auth-success?token=" . $token . "&role=" . $role);
+        // add data as query parameter
+        $queryParams = http_build_query([
+            'token'  => $token,
+            'role'   => $role,
+            'name'   => $user->name,
+            'email'  => $user->email,
+            'avatar' => $googleUser->avatar // Google  
+        ]);
+
+        return redirect("http://localhost:5173/auth-success?" . $queryParams);
     }
 }
