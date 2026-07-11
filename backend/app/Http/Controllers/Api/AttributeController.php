@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\AttributeRepositoryInterface;
-use App\Http\Resources\AttributeResource; // পরবর্তী ধাপে এটি তৈরি করব
+use App\Http\Resources\AttributeResource;
 
 class AttributeController extends Controller
 {
@@ -15,11 +15,18 @@ class AttributeController extends Controller
         $this->repo = $repo;
     }
 
-    public function index() {
-        // Eager loading
+   public function index() {
+    try {
         $attributes = $this->repo->getAll();
-        
-        // Resource 
         return AttributeResource::collection($attributes);
+    } catch (\Throwable $th) {
+        // error response
+        return response()->json([
+            'message' => 'Error occurred',
+            'error' => $th->getMessage(),
+            'file' => $th->getFile(),
+            'line' => $th->getLine()
+        ], 500);
     }
+}
 }
