@@ -75,6 +75,35 @@ public function store(Request $request)
             ], 500);
         }
     }
+//update Attribute
+ public function update(Request $request, $id)
+{
+    // Find the attribute
+    $attribute = Attribute::findOrFail($id);
+
+    // Validate input
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'category' => 'required|integer',
+        'type' => 'required|string',
+    ]);
+
+    // Use Database Transaction
+    return DB::transaction(function () use ($attribute, $validated) {
+        
+        // Update the field data
+        $attribute->update($validated);
+
+        // Increment the version by 1
+        $attribute->increment('version');
+
+        // Return the updated attribute (refresh to get the new version number)
+        return response()->json([
+            'message' => 'Attribute updated successfully', 
+            'data' => $attribute->fresh() // fresh() gets the latest data from DB
+        ]);
+    });
+}
 
 
     //delete attribute
