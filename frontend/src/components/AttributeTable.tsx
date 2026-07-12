@@ -1,32 +1,33 @@
-interface Attribute {
-  id: number;
-  name: string;
-  category: string;
-  type: string;
-  version: number;
-}
+import type { AttributeTableProps } from "../types/attribute";
 
-
-
-interface AttributeTableProps {
-  data: Attribute[] | undefined;
-  isLoading: boolean;
-  selectedId: number | null;
-  onRowSelect: (id: number) => void;
-}
 
 export const AttributeTable = ({
   data,
   isLoading,
-  selectedId,
-  onRowSelect,
+  selectedIds,
+  onSelectionChange,
 }: AttributeTableProps) => {
+
+  // toogle helper function
+  const handleToggle = (id: number) => {
+    if (selectedIds.includes(id)) {
+      // if id exists remove this and get new array
+      onSelectionChange(selectedIds.filter((item) => item !== id));
+    } else {
+
+      onSelectionChange([...selectedIds, id]);
+    }
+  };
+
   return (
     <div className="table-responsive">
       <table className="table table-hover align-middle mb-0">
         <thead className="table-light">
           <tr>
-            <th className="ps-4">Name</th>
+            <th style={{ width: "50px" }} className="ps-3">
+              <i className="bi bi-check-square"></i>
+            </th>
+            <th>Name</th>
             <th>Category</th>
             <th>Type</th>
             <th>Version</th>
@@ -37,7 +38,7 @@ export const AttributeTable = ({
         <tbody>
           {isLoading ? (
             <tr>
-              <td colSpan={5} className="text-center p-4">
+              <td colSpan={6} className="text-center p-4">
                 Loading...
               </td>
             </tr>
@@ -45,11 +46,22 @@ export const AttributeTable = ({
             data.map((attr) => (
               <tr
                 key={attr.id}
-                onClick={() => onRowSelect(attr.id)}
-                className={selectedId === attr.id ? "table-active" : ""}
+                onClick={() => handleToggle(attr.id)} // toggle function call
+                className={selectedIds.includes(attr.id) ? "table-active" : ""}
                 style={{ cursor: "pointer" }}
               >
-                <td className="ps-4">
+                {/* cheackbox colum */}
+                <td className="ps-3">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    checked={selectedIds.includes(attr.id)} // cheack array id
+                    onChange={() => handleToggle(attr.id)}
+                    onClick={(e) => e.stopPropagation()} // 
+                  />
+                </td>
+
+                <td className="ps-2">
                   <i className="bi bi-tag text-primary me-2"></i>
                   {attr.name}
                 </td>
@@ -67,15 +79,13 @@ export const AttributeTable = ({
                 </td>
 
                 <td>
-                  <span className="badge bg-success">
-                    Active
-                  </span>
+                  <span className="badge bg-success">Active</span>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="text-center p-4">
+              <td colSpan={6} className="text-center p-4">
                 No attributes found.
               </td>
             </tr>

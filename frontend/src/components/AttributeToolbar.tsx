@@ -1,9 +1,5 @@
-interface ToolbarProps {
-  selectedId: number | null;
-  onAdd: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-}
+import type { ToolbarProps } from "../types/attribute";
+
 
 export const AttributeToolbar = ({
   selectedId,
@@ -12,7 +8,7 @@ export const AttributeToolbar = ({
   onDelete,
 }: ToolbarProps) => {
   return (
-    // justify-content-end 
+    // justify-content-end
     <div className="d-flex align-items-center justify-content-end gap-2 mb-3">
       {/* Add */}
       <button
@@ -28,7 +24,11 @@ export const AttributeToolbar = ({
       </button>
 
       {/* Edit */}
-      <span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Selected">
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Edit Selected"
+      >
         <button
           type="button"
           className="btn btn-outline-primary btn-sm"
@@ -41,14 +41,16 @@ export const AttributeToolbar = ({
       </span>
 
       {/* Delete - span wrap disabled  */}
-      <span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Selected">
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Delete Selected"
+      >
         <button
-          type="button"
-          className="btn btn-outline-danger btn-sm"
+          className="btn btn-danger"
           onClick={onDelete}
           disabled={!selectedId}
         >
-          <i className="bi bi-trash me-1"></i>
           Delete
         </button>
       </span>

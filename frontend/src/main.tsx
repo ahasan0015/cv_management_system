@@ -22,8 +22,9 @@ import CandidateProfile from "./pages/candidate/CandidateProfile";
 import AuthSuccess from "./pages/AuthSuccess";
 import RecruterDashboard from "./pages/recruiter/RecruterDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AttributePage from "./pages/AttributePage";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AttributePage from "./pages/admin/AttributePage";
 
 const queryClient = new QueryClient();
 
