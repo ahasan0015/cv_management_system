@@ -3,13 +3,12 @@ import { useAttributes } from "../../hooks/useAttributes";
 import { AttributeToolbar } from "../../components/AttributeToolbar";
 import { AttributeTable } from "../../components/AttributeTable";
 
-
 import { attributeService } from "../../services/attributeService";
 
 import { useAttributeTypes } from "../../hooks/useAttributeTypes";
-import type { AttributeFormData } from "../../types/attribute";
+import type { Attribute, AttributeFormData } from "../../types/attribute";
 import { AttributeModal } from "../../components/AttributeModal";
-import { useCategories } from "../../hooks/UseCategories";
+import { useCategories } from "../../hooks/useCategories";
 
 const AttributePage = () => {
   // State Management
@@ -22,30 +21,38 @@ const AttributePage = () => {
   const { data: categories = [] } = useCategories();
   const { data: types = [] } = useAttributeTypes();
 
+  // for edit
+  const [editingAttribute, setEditingAttribute] = useState<Attribute | null>(null);
+
   // --- CRUD Handlers ---
 
-  const handleSave = async (formData: AttributeFormData) => {
-    setIsSubmitting(true);
-    try {
-      const payload = {
-        ...formData,
-        // toString()
-        category: parseInt(formData.category.toString()) || 0,
-        version: 1,
-      };
+ const handleSave = async (formData: AttributeFormData, id?: number) => {
+  setIsSubmitting(true);
+  try {
+    const payload = {
+      ...formData,
+      category: parseInt(formData.category.toString()) || 0,
+      version: 1,
+    };
 
+    if (id) {
+      await attributeService.update(id, payload);
+      alert("Attribute updated successfully!");
+    } else {
       await attributeService.create(payload);
       alert("Attribute added successfully!");
-      setShowModal(false);
-      refetch();
-    } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      console.error("Save error:", err);
-      alert(err.response?.data?.message || "Failed to save attribute.");
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    setShowModal(false);
+    setEditingAttribute(null);
+    refetch();
+  } catch (error) {
+    console.error("Save error:", error); 
+    alert("Failed to save attribute.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleDelete = async () => {
     if (selectedIds.length === 0) return;
@@ -72,11 +79,16 @@ const AttributePage = () => {
     <div className="container-fluid p-4">
       {/* Modal component */}
       <AttributeModal
+        key={editingAttribute ? editingAttribute.id : "new-attribute"}
         show={showModal}
+        initialData={editingAttribute} 
         categories={categories}
-        onClose={() => setShowModal(false)}
+        onClose={() => {
+          setShowModal(false);
+          setEditingAttribute(null);
+        }}
         types={types}
-        onSave={handleSave} // Now handleSave is defined and passed
+        onSave={handleSave}
         isSubmitting={isSubmitting}
       />
 
@@ -88,8 +100,18 @@ const AttributePage = () => {
         {/* Toolbar */}
         <AttributeToolbar
           selectedId={selectedIds.length > 0 ? selectedIds[0] : null}
-          onAdd={() => setShowModal(true)}
-          onEdit={() => console.log("Open Edit for:", selectedIds)}
+          onAdd={() => {
+            setEditingAttribute(null); 
+            setShowModal(true);
+          }}
+          onEdit={() => {
+            // find selected id
+            const item = data?.find((i) => i.id === selectedIds[0]);
+            if (item) {
+              setEditingAttribute(item);
+              setShowModal(true);
+            }
+          }}
           onDelete={handleDelete}
         />
       </div>

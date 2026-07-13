@@ -9,10 +9,11 @@ export interface Attribute {
 export interface AttributeModalProps {
   show: boolean;
   onClose: () => void;
-  onSave: (form: AttributeFormData) => void;
+  onSave: (form: AttributeFormData, id?: number) => void;
   isSubmitting: boolean;
   categories: { id: number; name: string }[];
   types: { id: number; name: string; slug: string }[];
+  initialData?: Attribute | null; 
 }
 
 export interface AttributeFormData {
