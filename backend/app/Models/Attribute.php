@@ -15,4 +15,20 @@ class Attribute extends Model
     public function attributeType() {
         return $this->belongsTo(\App\Models\AttributeType::class, 'attribute_type_id');
     }
+
+    public function scopeSearch($query, $search)
+    {
+    // Full-text search full text search
+    return $query->when($search, fn($q) => $q->where('name', 'like', "%{$search}%"));
+    }
+
+    public function scopeByCategory($query, $category)
+    {
+    return $query->when($category, fn($q) => $q->where('category_id', $category));
+    }
+
+    public function scopeByPrefix($query, $prefix)
+    {
+    return $query->when($prefix, fn($q) => $q->where('name', 'like', "{$prefix}%"));
+    }
 }

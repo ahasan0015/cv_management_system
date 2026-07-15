@@ -6,11 +6,22 @@ use App\Models\Attribute;
 
 class AttributeRepository implements AttributeRepositoryInterface {
     
-    public function getAll() {
-        return Attribute::with(['category', 'attributeType'])
-            ->select(['id', 'name', 'category_id', 'attribute_type_id', 'version'])
-            ->get();
-    }
+   // app/Repositories/AttributeRepository.php
+
+public function getAll(array $filters = []) {
+    // query
+    $query = Attribute::query()
+        ->select(['id', 'name', 'category_id', 'attribute_type_id', 'version'])
+        ->with(['category:id,name', 'attributeType:id,name'])
+        ->search($filters['search'] ?? null)
+        ->byCategory($filters['category'] ?? null)
+        ->byPrefix($filters['prefix'] ?? null);
+
+    // for debug
+    // dd($query->toSql(), $query->getBindings());
+
+    return $query->get();
+}
 
     public function updateWithLock(int $id, array $data, int $version) {
         return Attribute::where('id', $id)

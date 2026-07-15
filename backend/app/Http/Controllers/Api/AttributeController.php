@@ -20,20 +20,18 @@ class AttributeController extends Controller
         $this->repo = $repo;
     }
 
-    public function index()
-    {
-        try {
-            $attributes = $this->repo->getAll();
+   // app/Http/Controllers/Api/AttributeController.php
 
-            return AttributeResource::collection($attributes);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => 'Error occurred',
-                'error' => $th->getMessage(),
-            ], 500);
-        }
-    }
+public function index(Request $request)
+{
+    // Request filter
+    $filters = $request->only(['search', 'category', 'prefix']);
+    
+    // filter pass on repotitory
+    $attributes = $this->repo->getAll($filters);
 
+    return AttributeResource::collection($attributes);
+}
 public function store(Request $request)
     {
         //validation
@@ -76,35 +74,43 @@ public function store(Request $request)
         }
     }
 //update Attribute
- public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
-    // Find the attribute
+    // ১. Find the attribute
     $attribute = Attribute::findOrFail($id);
 
-    // Validate input
+    // ২. Validate input
     $validated = $request->validate([
         'name' => 'required|string|max:255',
-        'category' => 'required|integer',
-        'type' => 'required|string',
+        'category' => 'required|integer', 
+        'type' => 'required|string', 
     ]);
 
-    // Use Database Transaction
-    return DB::transaction(function () use ($attribute, $validated) {
-        
-        // Update the field data
-        $attribute->update($validated);
+    // ৩. Type slug from id
+    $attributeType = AttributeType::where('slug', $validated['type'])->first();
 
-        // Increment the version by 1
+    if (!$attributeType) {
+        return response()->json(['message' => 'Invalid attribute type provided.'], 422);
+    }
+
+    // ৪. Database Transaction
+    return DB::transaction(function () use ($attribute, $validated, $attributeType) {
+        
+        $attribute->update([
+            'name'              => $validated['name'],
+            'category_id'       => $validated['category'],
+            'attribute_type_id' => $attributeType->id,
+        ]);
+
+        // ৬. Increment version
         $attribute->increment('version');
 
-        // Return the updated attribute (refresh to get the new version number)
         return response()->json([
             'message' => 'Attribute updated successfully', 
-            'data' => $attribute->fresh() // fresh() gets the latest data from DB
+            'data' => new AttributeResource($attribute->fresh()) 
         ]);
     });
 }
-
 
     //delete attribute
 public function destroy($id)
