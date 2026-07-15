@@ -1,15 +1,19 @@
+// src/hooks/useAttributes.ts
 import { useQuery } from '@tanstack/react-query';
-// import axios from 'axios';
-import api from '../config/axios';
-import type { Attribute } from '../types/attribute';
+import { attributeService } from '../services/attributeService';
+import type { AttributeFilters } from '../types/attribute';
 
-
-export const useAttributes = () => {
-  return useQuery<Attribute[]>({ // Tpye define
-    queryKey: ['attributes'],
+// src/hooks/useAttributes.ts
+// src/hooks/useAttributes.ts
+export const useAttributes = (filters?: AttributeFilters) => {
+  return useQuery({
+    // JSON.stringify 
+    queryKey: ['attributes', JSON.stringify(filters)], 
     queryFn: async () => {
-      const { data } = await api.get('/attributes');
-      return data.data; 
+      const response = await attributeService.getAll(filters);
+      return response.data; // api response {data: [...]}
     },
+    // cache data
+    staleTime: 30000, 
   });
 };

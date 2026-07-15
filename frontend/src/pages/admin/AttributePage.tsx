@@ -6,7 +6,11 @@ import { AttributeTable } from "../../components/AttributeTable";
 import { attributeService } from "../../services/attributeService";
 
 import { useAttributeTypes } from "../../hooks/useAttributeTypes";
-import type { Attribute, AttributeFormData } from "../../types/attribute";
+import type {
+  Attribute,
+  AttributeFilters,
+  AttributeFormData,
+} from "../../types/attribute";
 import { AttributeModal } from "../../components/AttributeModal";
 import { useCategories } from "../../hooks/useCategories";
 
@@ -15,44 +19,53 @@ const AttributePage = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [filters, setFilters] = useState<AttributeFilters>({});
 
   // Data Fetching
-  const { data, isLoading, refetch } = useAttributes();
+  const { data, isLoading, refetch } = useAttributes(filters);
+  // console.log("Raw Data from API:", data);
   const { data: categories = [] } = useCategories();
   const { data: types = [] } = useAttributeTypes();
 
   // for edit
-  const [editingAttribute, setEditingAttribute] = useState<Attribute | null>(null);
+  const [editingAttribute, setEditingAttribute] = useState<Attribute | null>(
+    null,
+  );
 
+  // filter update handeler
+  const handleFilterUpdate = (newFilters: AttributeFilters) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+  };
+  
   // --- CRUD Handlers ---
 
- const handleSave = async (formData: AttributeFormData, id?: number) => {
-  setIsSubmitting(true);
-  try {
-    const payload = {
-      ...formData,
-      category: parseInt(formData.category.toString()) || 0,
-      version: 1,
-    };
+  const handleSave = async (formData: AttributeFormData, id?: number) => {
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        ...formData,
+        category: parseInt(formData.category.toString()) || 0,
+        version: 1,
+      };
 
-    if (id) {
-      await attributeService.update(id, payload);
-      alert("Attribute updated successfully!");
-    } else {
-      await attributeService.create(payload);
-      alert("Attribute added successfully!");
+      if (id) {
+        await attributeService.update(id, payload);
+        alert("Attribute updated successfully!");
+      } else {
+        await attributeService.create(payload);
+        alert("Attribute added successfully!");
+      }
+
+      setShowModal(false);
+      setEditingAttribute(null);
+      refetch();
+    } catch (error) {
+      console.error("Save error:", error);
+      alert("Failed to save attribute.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setShowModal(false);
-    setEditingAttribute(null);
-    refetch();
-  } catch (error) {
-    console.error("Save error:", error); 
-    alert("Failed to save attribute.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const handleDelete = async () => {
     if (selectedIds.length === 0) return;
@@ -81,7 +94,7 @@ const AttributePage = () => {
       <AttributeModal
         key={editingAttribute ? editingAttribute.id : "new-attribute"}
         show={showModal}
-        initialData={editingAttribute} 
+        initialData={editingAttribute}
         categories={categories}
         onClose={() => {
           setShowModal(false);
@@ -101,18 +114,21 @@ const AttributePage = () => {
         <AttributeToolbar
           selectedId={selectedIds.length > 0 ? selectedIds[0] : null}
           onAdd={() => {
-            setEditingAttribute(null); 
+            setEditingAttribute(null);
             setShowModal(true);
           }}
           onEdit={() => {
             // find selected id
-            const item = data?.find((i) => i.id === selectedIds[0]);
+            const item = data?.data?.find((i: Attribute) => i.id === selectedIds[0]);
             if (item) {
               setEditingAttribute(item);
               setShowModal(true);
             }
           }}
           onDelete={handleDelete}
+          categories={categories}
+          onSearch={(val) => handleFilterUpdate({ search: val })}
+          onCategoryFilter={(id) => handleFilterUpdate({ category: id })}
         />
       </div>
 
@@ -121,7 +137,8 @@ const AttributePage = () => {
           <div className="card border-0 shadow-sm">
             {/* Table Component */}
             <AttributeTable
-              data={data}
+              // data={data}
+              data={data?.data || []}
               isLoading={isLoading}
               selectedIds={selectedIds}
               onSelectionChange={(ids: number[]) => setSelectedIds(ids)}

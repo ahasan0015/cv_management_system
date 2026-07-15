@@ -34,4 +34,13 @@ export interface ToolbarProps {
   onAdd: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onSearch: (value: string) => void;
+  onCategoryFilter: (categoryId: number | undefined) => void;
+  categories: { id: number; name: string }[]; // for drop down
+}
+
+export interface AttributeFilters {
+  search?: string;
+  category?: number;
+  prefix?: string;
 }

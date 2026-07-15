@@ -14,11 +14,18 @@ export const AttributeModal = ({
   types = [],
   initialData,
 }: AttributeModalProps) => {
-  const [form, setForm] = useState<AttributeFormData>({
-    name: initialData?.name || "",
-    category: initialData?.category || 0,
-    type: initialData?.type || "",
-  });
+// initialData to state
+const [form, setForm] = useState<AttributeFormData>({
+  name: initialData?.name || "",
+
+  category: categories.find((c) => String(c.name) === String(initialData?.category))?.id || 0,
+
+    type: types.find((t) => String(t.name) === String(initialData?.type))?.slug || "",
+});
+  // console.log("Current Form State:", form);
+// console.log("Categories List:", categories);
+  
+  
 
   // for edit mode handle
 
