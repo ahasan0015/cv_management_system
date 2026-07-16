@@ -31,4 +31,12 @@ class Attribute extends Model
     {
     return $query->when($prefix, fn($q) => $q->where('name', 'like', "{$prefix}%"));
     }
+
+    public function scopeBySort($query, $sort)
+{
+    return $query->when($sort === 'oldest', 
+        fn($q) => $q->orderBy('created_at', 'asc'), // Oldest
+        fn($q) => $q->orderBy('created_at', 'desc') // Default: Newest/Recently Used
+    );
+}
 }

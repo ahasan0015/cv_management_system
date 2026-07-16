@@ -16,7 +16,7 @@ public function getAll(array $filters = [], int $perPage = 10 ){
         ->search($filters['search'] ?? null)
         ->byCategory($filters['category'] ?? null)
         ->byPrefix($filters['prefix'] ?? null)
-        ->latest();
+        ->bySort($filters['sort'] ?? 'newest');
     return $query->paginate($perPage);
 }
 
