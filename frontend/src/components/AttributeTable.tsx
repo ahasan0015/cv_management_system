@@ -1,3 +1,4 @@
+import Skeleton from "react-loading-skeleton";
 import type { AttributeTableProps, PaginationLink } from "../types/attribute";
 
 export const AttributeTable = ({
@@ -37,11 +38,15 @@ export const AttributeTable = ({
 
           <tbody>
             {isLoading ? (
-              <tr>
-                <td colSpan={6} className="text-center p-4">
-                  Loading...
-                </td>
+            Array(10).fill(0).map((_, index) => (
+              <tr key={index}>
+                <td><Skeleton width={20} /></td> 
+                <td><Skeleton height={20} width={150} /></td> 
+                <td><Skeleton height={20} width={100} /></td> 
+                <td><Skeleton height={20} width={80} /></td>  
+                <td><Skeleton height={20} width={120} /></td> 
               </tr>
+            ))
             ) : data?.length ? (
               data.map((attr) => (
                 <tr

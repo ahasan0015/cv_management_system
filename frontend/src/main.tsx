@@ -6,6 +6,9 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 
+//skeleton css
+import 'react-loading-skeleton/dist/skeleton.css';
+
 
 // React Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
