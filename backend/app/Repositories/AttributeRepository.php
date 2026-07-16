@@ -8,19 +8,16 @@ class AttributeRepository implements AttributeRepositoryInterface {
     
    // app/Repositories/AttributeRepository.php
 
-public function getAll(array $filters = []) {
+public function getAll(array $filters = [], int $perPage = 10 ){
     // query
     $query = Attribute::query()
         ->select(['id', 'name', 'category_id', 'attribute_type_id', 'version'])
         ->with(['category:id,name', 'attributeType:id,name'])
         ->search($filters['search'] ?? null)
         ->byCategory($filters['category'] ?? null)
-        ->byPrefix($filters['prefix'] ?? null);
-
-    // for debug
-    // dd($query->toSql(), $query->getBindings());
-
-    return $query->get();
+        ->byPrefix($filters['prefix'] ?? null)
+        ->latest();
+    return $query->paginate($perPage);
 }
 
     public function updateWithLock(int $id, array $data, int $version) {

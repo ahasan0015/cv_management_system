@@ -26,9 +26,9 @@ public function index(Request $request)
 {
     // Request filter
     $filters = $request->only(['search', 'category', 'prefix']);
-    
+    $perPage = $request->query('per_page', 10);
     // filter pass on repotitory
-    $attributes = $this->repo->getAll($filters);
+   $attributes = $this->repo->getAll($filters, (int)$perPage);
 
     return AttributeResource::collection($attributes);
 }
