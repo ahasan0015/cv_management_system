@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAttributes } from "../../hooks/useAttributes";
 import { AttributeToolbar } from "../../components/AttributeToolbar";
 import { AttributeTable } from "../../components/AttributeTable";
-
+import { debounce } from "lodash";
 import { attributeService } from "../../services/attributeService";
 
 import { useAttributeTypes } from "../../hooks/useAttributeTypes";
@@ -27,21 +27,37 @@ const AttributePage = () => {
   const { data: categories = [] } = useCategories();
   const { data: types = [] } = useAttributeTypes();
 
-  // for page switch
-const handlePageChange = (newPage: number) => {
-  setFilters((prev) => ({ ...prev, page: newPage }));
-};
-
   // for edit
   const [editingAttribute, setEditingAttribute] = useState<Attribute | null>(
     null,
   );
 
-  // filter update handeler
+  // for page switch
+  const handlePageChange = (newPage: number) => {
+    setFilters((prev) => ({ ...prev, page: newPage }));
+  };
+
+
+  // // filter update handeler
   const handleFilterUpdate = (newFilters: AttributeFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
   };
   
+  // Debounced Search using useMemo 
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((val: string) => {
+        handleFilterUpdate({ search: val, page: 1 });
+      }, 500),
+    []
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
   // --- CRUD Handlers ---
 
   const handleSave = async (formData: AttributeFormData, id?: number) => {
@@ -124,7 +140,9 @@ const handlePageChange = (newPage: number) => {
           }}
           onEdit={() => {
             // find selected id
-            const item = data?.data?.find((i: Attribute) => i.id === selectedIds[0]);
+            const item = data?.data?.find(
+              (i: Attribute) => i.id === selectedIds[0],
+            );
             if (item) {
               setEditingAttribute(item);
               setShowModal(true);
@@ -132,8 +150,12 @@ const handlePageChange = (newPage: number) => {
           }}
           onDelete={handleDelete}
           categories={categories}
-          onSearch={(val) => handleFilterUpdate({ search: val })}
-          onCategoryFilter={(id) => handleFilterUpdate({ category: id })}
+          // onSearch={(val) => handleFilterUpdate({ search: val })}
+          onSearch={(val) => debouncedSearch(val)}
+          // onCategoryFilter={(id) => handleFilterUpdate({ category: id })}
+          onCategoryFilter={(id) =>
+            handleFilterUpdate({ category: id, page: 1 })
+          }
         />
       </div>
 
