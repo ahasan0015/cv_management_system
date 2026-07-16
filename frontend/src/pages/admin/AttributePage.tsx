@@ -19,13 +19,18 @@ const AttributePage = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [filters, setFilters] = useState<AttributeFilters>({});
+  const [filters, setFilters] = useState<AttributeFilters>({ page: 1 });
 
   // Data Fetching
   const { data, isLoading, refetch } = useAttributes(filters);
   // console.log("Raw Data from API:", data);
   const { data: categories = [] } = useCategories();
   const { data: types = [] } = useAttributeTypes();
+
+  // for page switch
+const handlePageChange = (newPage: number) => {
+  setFilters((prev) => ({ ...prev, page: newPage }));
+};
 
   // for edit
   const [editingAttribute, setEditingAttribute] = useState<Attribute | null>(
@@ -139,6 +144,8 @@ const AttributePage = () => {
             <AttributeTable
               // data={data}
               data={data?.data || []}
+              meta={data?.meta} // এখানে meta টি পাস করুন
+              onPageChange={handlePageChange} // হ্যান্ডলারটি পাঠান
               isLoading={isLoading}
               selectedIds={selectedIds}
               onSelectionChange={(ids: number[]) => setSelectedIds(ids)}

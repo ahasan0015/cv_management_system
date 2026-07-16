@@ -6,6 +6,24 @@ export interface Attribute {
   version: number;
 }
 
+export interface PaginationLink {
+  url: string | null;
+  label: string;
+  active: boolean;
+  page: number | null; 
+}
+
+export interface PaginationMeta {
+  current_page: number;
+  from: number;
+  last_page: number;
+  links: PaginationLink[];
+  path: string;
+  per_page: number;
+  to: number;
+  total: number;
+}
+
 export interface AttributeModalProps {
   show: boolean;
   onClose: () => void;
@@ -24,6 +42,8 @@ export interface AttributeFormData {
 
 export interface AttributeTableProps {
   data: Attribute[] | undefined;
+  meta?: PaginationMeta;
+  onPageChange: (page: number) => void;
   isLoading: boolean;
   selectedIds: number[]; 
   onSelectionChange: (ids: number[]) => void; 
@@ -43,4 +63,5 @@ export interface AttributeFilters {
   search?: string;
   category?: number;
   prefix?: string;
+  page?: number;
 }
