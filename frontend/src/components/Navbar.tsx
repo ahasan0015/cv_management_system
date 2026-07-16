@@ -1,5 +1,6 @@
-import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";
+import { getDashboardRoute } from "../utils/dashboardRoute";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -7,7 +8,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -18,10 +19,16 @@ const Navbar = () => {
         </a>
 
         <div className="d-flex flex-wrap align-items-center justify-content-end gap-2 ms-auto">
-          <a className="nav-link px-3 py-2 rounded-pill text-dark fw-semibold" href="/">
+          <a
+            className="nav-link px-3 py-2 rounded-pill text-dark fw-semibold"
+            href="/"
+          >
             <i className="bi bi-house-door me-1"></i> Home
           </a>
-          <a className="nav-link px-3 py-2 rounded-pill text-dark fw-semibold" href="#jobs">
+          <a
+            className="nav-link px-3 py-2 rounded-pill text-dark fw-semibold"
+            href="#jobs"
+          >
             <i className="bi bi-briefcase me-1"></i> Jobs
           </a>
 
@@ -47,17 +54,27 @@ const Navbar = () => {
                 />
                 <span>{user.name}</span>
               </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <ul
+                className="dropdown-menu dropdown-menu-end"
+                aria-labelledby="userDropdown"
+              >
                 <li>
-                  <a className="dropdown-item" href="/dashboard">
-                    <i className="bi bi-speedometer2 me-2"></i>Dashboard
-                  </a>
+                  <Link
+                    className="dropdown-item"
+                    to={getDashboardRoute(user.role)}
+                  >
+                    <i className="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                  </Link>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <button className="dropdown-item text-danger" onClick={handleLogout}>
+                  <button
+                    className="dropdown-item text-danger"
+                    onClick={handleLogout}
+                  >
                     <i className="bi bi-box-arrow-right me-2"></i>Logout
                   </button>
                 </li>
