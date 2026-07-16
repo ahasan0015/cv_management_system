@@ -25,6 +25,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AttributePage from "./pages/admin/AttributePage";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ createRoot(document.getElementById("root")!).render(
   
   <QueryClientProvider client={queryClient}>
   <AuthProvider>
+    <Toaster position="top-right" reverseOrder={false} />
     <RouterProvider router={AppRoute} />
   </AuthProvider>
   </QueryClientProvider>

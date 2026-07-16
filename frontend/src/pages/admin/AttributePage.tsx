@@ -13,6 +13,8 @@ import type {
 } from "../../types/attribute";
 import { AttributeModal } from "../../components/AttributeModal";
 import { useCategories } from "../../hooks/useCategories";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const AttributePage = () => {
   // State Management
@@ -37,19 +39,18 @@ const AttributePage = () => {
     setFilters((prev) => ({ ...prev, page: newPage }));
   };
 
-
   // // filter update handeler
   const handleFilterUpdate = (newFilters: AttributeFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
   };
-  
-  // Debounced Search using useMemo 
+
+  // Debounced Search using useMemo
   const debouncedSearch = useMemo(
     () =>
       debounce((val: string) => {
         handleFilterUpdate({ search: val, page: 1 });
       }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -71,10 +72,10 @@ const AttributePage = () => {
 
       if (id) {
         await attributeService.update(id, payload);
-        alert("Attribute updated successfully!");
+        toast.success("Attribute updated successfully!"); // Toast Success
       } else {
         await attributeService.create(payload);
-        alert("Attribute added successfully!");
+        toast.success("Attribute added successfully!");
       }
 
       setShowModal(false);
@@ -82,7 +83,7 @@ const AttributePage = () => {
       refetch();
     } catch (error) {
       console.error("Save error:", error);
-      alert("Failed to save attribute.");
+      toast.error("Failed to save attribute."); // Toast Error
     } finally {
       setIsSubmitting(false);
     }
@@ -91,20 +92,26 @@ const AttributePage = () => {
   const handleDelete = async () => {
     if (selectedIds.length === 0) return;
 
-    if (
-      window.confirm(
-        `Are you sure you want to delete ${selectedIds.length} selected item(s)?`,
-      )
-    ) {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: `Delete ${selectedIds.length} selected item(s)?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!result.isConfirmed) return;
+    {
       try {
         await Promise.all(selectedIds.map((id) => attributeService.delete(id)));
-        alert("Attributes deleted successfully!");
+        toast.success("Attributes deleted successfully!"); // Toast Success
         setSelectedIds([]);
         refetch();
       } catch (error: unknown) {
         // Correcting this to avoid 'any'
         console.error("Delete error:", error);
-        alert("Failed to delete attributes.");
+        toast.error("Failed to delete attributes."); // Toast Error
       }
     }
   };
