@@ -163,6 +163,8 @@ const AttributePage = () => {
           onCategoryFilter={(id) =>
             handleFilterUpdate({ category: id, page: 1 })
           }
+          onSortChange={(val) => handleFilterUpdate({ sort: val, page: 1 })}
+          onPrefixSearch={(val) => handleFilterUpdate({ prefix: val, page: 1 })}
         />
       </div>
 
@@ -173,8 +175,8 @@ const AttributePage = () => {
             <AttributeTable
               // data={data}
               data={data?.data || []}
-              meta={data?.meta} // এখানে meta টি পাস করুন
-              onPageChange={handlePageChange} // হ্যান্ডলারটি পাঠান
+              meta={data?.meta}
+              onPageChange={handlePageChange}
               isLoading={isLoading}
               selectedIds={selectedIds}
               onSelectionChange={(ids: number[]) => setSelectedIds(ids)}

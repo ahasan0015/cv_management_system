@@ -57,6 +57,8 @@ export interface ToolbarProps {
   onSearch: (value: string) => void;
   onCategoryFilter: (categoryId: number | undefined) => void;
   categories: { id: number; name: string }[]; // for drop down
+  onSortChange: (value: "newest" | "oldest") => void; 
+  onPrefixSearch: (value: string) => void;
 }
 
 export interface AttributeFilters {
@@ -64,4 +66,5 @@ export interface AttributeFilters {
   category?: number;
   prefix?: string;
   page?: number;
+  sort?: "newest" | "oldest"; 
 }
