@@ -27,6 +27,9 @@ class DatabaseSeeder extends Seeder
             AttributeTypeSeeder::class,
             CategorySeeder::class,
             AttributeSeeder::class,
+            PositionSeeder::class,
+            CandidateProfileSeeder::class,
+            ProjectSeeder::class,
         ]);
     }
 }

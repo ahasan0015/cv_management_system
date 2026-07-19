@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AttributeController;
 use App\Http\Controllers\Api\AttributeTypeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PositionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/attributes', [AttributeController::class, 'index']);
 Route::get('/attribute-types', [AttributeTypeController::class, 'index']);
+
+//postion route
+Route::apiResource('positions', PositionController::class);
+Route::post('positions/{id}/duplicate', [PositionController::class, 'duplicate']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);   
