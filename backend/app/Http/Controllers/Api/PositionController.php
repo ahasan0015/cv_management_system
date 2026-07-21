@@ -25,17 +25,44 @@ class PositionController extends Controller
     }
 
     // POST: /api/positions
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'title' => 'required|string',
-            'max_project_count' => 'required|integer',
-            'attributes' => 'nullable|array'
-        ]);
+  public function store(Request $request)
+{
+    $data = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'max_project_count' => 'required|integer',
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'attributes' => 'nullable|array',
+        'attributes.*' => 'exists:attributes,id',
+        'access_rules' => 'nullable', 
+        'project_tags' => 'nullable', 
+    ]);
 
-        $position = $this->repository->create($data);
-        return new PositionResource($position->load('attributeList'));
+    if (isset($data['project_tags']) && is_string($data['project_tags'])) {
+        $data['project_tags'] = array_map('trim', explode(',', $data['project_tags']));
     }
+
+    // access_rules 
+    if (isset($data['access_rules']) && is_string($data['access_rules'])) {
+        $decoded = json_decode($data['access_rules'], true);
+        $data['access_rules'] = json_last_error() === JSON_ERROR_NONE ? $decoded : ['rule' => $data['access_rules']];
+    }
+
+    // attributes 
+    $attributes = $data['attributes'] ?? [];
+    unset($data['attributes']); 
+
+    // Create Position
+    $position = $this->repository->create($data);
+
+    // Attribute save / sync
+    if (!empty($attributes)) {
+        $position->attributeList()->sync($attributes);
+    }
+
+    return new PositionResource($position->load('attributeList'));
+}
 
     // GET: /api/positions/{id}
     public function show($id)
@@ -46,17 +73,45 @@ class PositionController extends Controller
 
     // PUT/PATCH: /api/positions/{id}
     public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'title' => 'required|string',
-            'max_project_count' => 'required|integer',
-            'attributes' => 'nullable|array'
-        ]);
+{
+    $data = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'max_project_count' => 'required|integer',
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'attributes' => 'nullable|array',
+        'attributes.*' => 'exists:attributes,id',
+        'access_rules' => 'nullable',
+        'project_tags' => 'nullable',
+    ]);
 
-        $position = $this->repository->update($id, $data);
-        return new PositionResource($position->load('attributeList'));
+    // project_tags
+    if (isset($data['project_tags']) && is_string($data['project_tags'])) {
+        $data['project_tags'] = array_map('trim', explode(',', $data['project_tags']));
     }
 
+    // access_rules
+    if (isset($data['access_rules']) && is_string($data['access_rules'])) {
+        $decoded = json_decode($data['access_rules'], true);
+        $data['access_rules'] = json_last_error() === JSON_ERROR_NONE
+            ? $decoded
+            : ['rule' => $data['access_rules']];
+    }
+
+    $attributes = $data['attributes'] ?? [];
+    unset($data['attributes']);
+
+    $position = $this->repository->update($id, $data);
+
+    if (!$position instanceof Position) {
+        $position = Position::findOrFail($id);
+    }
+
+    $position->attributeList()->sync($attributes);
+
+    return new PositionResource($position->load('attributeList'));
+}
     // DELETE: /api/positions/{id}
     public function destroy($id)
     {

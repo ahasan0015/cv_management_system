@@ -22,7 +22,8 @@ public function up(): void
         $table->date('start_date')->nullable();
         $table->date('end_date')->nullable();
         
-        $table->json('settings')->nullable(); // Access Rules
+        $table->json('access_rules')->nullable();
+        $table->json('project_tags')->nullable();
         $table->timestamps();
     });
 }

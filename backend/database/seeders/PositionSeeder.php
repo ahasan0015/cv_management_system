@@ -10,36 +10,54 @@ class PositionSeeder extends Seeder
 {
     public function run(): void
     {
-        // database gell all attribute
         $attributes = Attribute::all();
 
-        // position
-        $p1 = Position::create([
-            'title' => 'Senior Frontend Developer',
-            'description' => 'We are looking for a React expert with deep knowledge in TypeScript.',
-            'max_project_count' => 3,
-            'start_date' => now(), // today date
-            'end_date' => now()->addMonths(6), 
-            'settings' => ['remote' => true, 'work_type' => 'Full-time'],
-        ]);
+        for ($i = 1; $i <= 20; $i++) {
 
-        // Randomly Attribute attach 
-        if ($attributes->count() > 0) {
-            $p1->attributes()->attach($attributes->random(min(2, $attributes->count()))->pluck('id'));
-        }
+            $position = Position::create([
+                'title' => fake()->jobTitle(),
+                'description' => fake()->paragraph(3),
+                'max_project_count' => fake()->numberBetween(1, 10),
+                'start_date' => fake()->dateTimeBetween('-1 month', '+1 month'),
+                'end_date' => fake()->dateTimeBetween('+2 months', '+12 months'),
+                'access_rules' => [
+                    'min_experience' => fake()->numberBetween(0, 10),
+                    'roles' => fake()->randomElements([
+                        'Frontend Dev',
+                        'Backend Dev',
+                        'Full Stack Dev',
+                        'QA Engineer',
+                        'DevOps Engineer',
+                    ], fake()->numberBetween(1, 3)),
+                ],
+                'project_tags' => fake()->randomElements([
+                    'Laravel',
+                    'React',
+                    'Vue',
+                    'Angular',
+                    'Node.js',
+                    'PHP',
+                    'TypeScript',
+                    'JavaScript',
+                    'Tailwind',
+                    'Bootstrap',
+                    'MySQL',
+                    'PostgreSQL',
+                    'REST API',
+                    'GraphQL',
+                    'Docker',
+                ], fake()->numberBetween(2, 5)),
+            ]);
 
-        // position Backend Engineer
-        $p2 = Position::create([
-            'title' => 'Backend Engineer (Laravel)',
-            'description' => 'Looking for a professional to manage our API infrastructure.',
-            'max_project_count' => 5,
-            'start_date' => now(),
-            'end_date' => now()->addMonths(3),
-            'settings' => ['remote' => false, 'location' => 'Dhaka'],
-        ]);
-
-        if ($attributes->count() > 0) {
-            $p2->attributes()->attach($attributes->random(min(2, $attributes->count()))->pluck('id'));
+            // Attach 1-5 random attributes
+            if ($attributes->count() > 0) {
+                $position->attributeList()->attach(
+                    $attributes
+                        ->random(min(fake()->numberBetween(1, 5), $attributes->count()))
+                        ->pluck('id')
+                        ->toArray()
+                );
+            }
         }
     }
 }

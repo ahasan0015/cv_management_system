@@ -14,7 +14,6 @@ class Position extends Model
         'title', 
         'description', 
         'max_project_count', 
-        'settings', // Used for JSON data
         'access_rules', 
         'project_tags',
         'start_date',
@@ -22,9 +21,8 @@ class Position extends Model
     ];
 
     protected $casts = [
-        'settings' => 'array',
-        'access_rules' => 'array', // Cast to array
-        'project_tags' => 'array', // Cast to array
+        'access_rules' => 'array', 
+        'project_tags' => 'array', 
         'start_date' => 'date', 
         'end_date' => 'date',   
     ];

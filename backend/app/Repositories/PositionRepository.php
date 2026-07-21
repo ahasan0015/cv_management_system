@@ -10,10 +10,18 @@ class PositionRepository
     public function create(array $data)
     {
         return DB::transaction(function () use ($data) {
+            // attributes 
+            $attributes = $data['attributes'] ?? [];
+            unset($data['attributes']);
+
+            // positions table data save
             $position = Position::create($data);
-            if (!empty($data['attributes'])) {
-                $position->attributeList()->sync($data['attributes']);
+
+            // pivot table sttribute sync
+            if (!empty($attributes)) {
+                $position->attributeList()->sync($attributes);
             }
+
             return $position;
         });
     }
@@ -22,11 +30,18 @@ class PositionRepository
     {
         return DB::transaction(function () use ($id, $data) {
             $position = Position::findOrFail($id);
+
+            // attributes 
+            $attributes = $data['attributes'] ?? [];
+            unset($data['attributes']);
+
+            // positions 
             $position->update($data);
             
-            if (isset($data['attributes'])) {
-                $position->attributeList()->sync($data['attributes']);
+            if (isset($data['attributes']) || !empty($attributes)) {
+                $position->attributeList()->sync($attributes);
             }
+
             return $position;
         });
     }
