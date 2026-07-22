@@ -55,4 +55,11 @@ class User extends Authenticatable
     {
     return $this->belongsTo(Role::class);
     }  
+
+    // Candidate Profile Relationship 
+    public function candidateProfile()
+    {
+        return $this->hasOne(CandidateProfile::class);
+    }
+    
 }
