@@ -5,10 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-
 //skeleton css
-import 'react-loading-skeleton/dist/skeleton.css';
-
+import "react-loading-skeleton/dist/skeleton.css";
 
 // React Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -29,6 +27,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AttributePage from "./pages/admin/AttributePage";
 import { Toaster } from "react-hot-toast";
+import PositionsPage from "./pages/recruiter/PositionsPage";
 
 const queryClient = new QueryClient();
 
@@ -46,7 +45,10 @@ const AppRoute = createBrowserRouter([
   },
   {
     element: <ProtectedRoute allowedRoles={["recruiter"]} />,
-    children: [{ path: "/recruiter-dashboard", element: <RecruterDashboard /> }],
+    children: [
+      { path: "/recruiter-dashboard", element: <RecruterDashboard /> },
+      { path: "/recruiter-position", element: <PositionsPage /> },
+    ],
   },
   {
     element: <ProtectedRoute allowedRoles={["admin", "recruiter"]} />,
@@ -59,11 +61,10 @@ const AppRoute = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  
   <QueryClientProvider client={queryClient}>
-  <AuthProvider>
-    <Toaster position="top-right" reverseOrder={false} />
-    <RouterProvider router={AppRoute} />
-  </AuthProvider>
-  </QueryClientProvider>
+    <AuthProvider>
+      <Toaster position="top-right" reverseOrder={false} />
+      <RouterProvider router={AppRoute} />
+    </AuthProvider>
+  </QueryClientProvider>,
 );

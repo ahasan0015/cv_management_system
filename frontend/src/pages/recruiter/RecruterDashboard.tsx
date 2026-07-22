@@ -1,10 +1,11 @@
 // import { useNavigate } from "react-router-dom";
 // import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 
 const RecruterDashboard = () => {
-//   const navigate = useNavigate();
-//   const { user, logout } = useAuth();
+  //   const navigate = useNavigate();
+  //   const { user, logout } = useAuth();
 
   const menuItems = [
     { name: "Overview", icon: "bi-speedometer2", active: true },
@@ -16,26 +17,61 @@ const RecruterDashboard = () => {
   ];
 
   const stats = [
-    { title: "Active Job Posts", value: "48", subtitle: "+6 this month", color: "primary" },
-    { title: "CV Downloads", value: "1,240", subtitle: "+18% stronger", color: "success" },
-    { title: "Scheduled Interviews", value: "24", subtitle: "4 today", color: "warning" },
-    { title: "Hired Candidates", value: "14", subtitle: "+2 this week", color: "info" },
+    {
+      title: "Active Job Posts",
+      value: "48",
+      subtitle: "+6 this month",
+      color: "primary",
+    },
+    {
+      title: "CV Downloads",
+      value: "1,240",
+      subtitle: "+18% stronger",
+      color: "success",
+    },
+    {
+      title: "Scheduled Interviews",
+      value: "24",
+      subtitle: "4 today",
+      color: "warning",
+    },
+    {
+      title: "Hired Candidates",
+      value: "14",
+      subtitle: "+2 this week",
+      color: "info",
+    },
   ];
 
   const applications = [
-    { name: "Nadia Rahman", role: "Frontend Developer", status: "Shortlisted", date: "Today" },
-    { name: "Arif Hossain", role: "React Engineer", status: "Interview", date: "Tomorrow" },
-    { name: "Mim Akter", role: "UI/UX Designer", status: "Pending", date: "2 days ago" },
+    {
+      name: "Nadia Rahman",
+      role: "Frontend Developer",
+      status: "Shortlisted",
+      date: "Today",
+    },
+    {
+      name: "Arif Hossain",
+      role: "React Engineer",
+      status: "Interview",
+      date: "Tomorrow",
+    },
+    {
+      name: "Mim Akter",
+      role: "UI/UX Designer",
+      status: "Pending",
+      date: "2 days ago",
+    },
   ];
 
-//   const handleLogout = () => {
-//     logout();
-//     navigate("/login");
-//   };
+  //   const handleLogout = () => {
+  //     logout();
+  //     navigate("/login");
+  //   };
 
   return (
     <div className="min-vh-100 bg-light">
-        <Navbar/>
+      <Navbar />
       <div className="d-flex flex-column flex-lg-row">
         <div className="d-lg-none p-3 bg-white border-bottom">
           <button
@@ -48,6 +84,11 @@ const RecruterDashboard = () => {
             <span className="fw-semibold">Menu</span>
             <i className="bi bi-list"></i>
           </button>
+
+          <Link to="/recruiter-position" className="btn btn-primary w-100 mt-2">
+            <i className="bi bi-briefcase me-2"></i>
+            Recruiter Position
+          </Link>
         </div>
 
         <aside
@@ -56,7 +97,10 @@ const RecruterDashboard = () => {
         >
           <div className="p-3 p-lg-4 border-bottom">
             <div className="d-flex align-items-center gap-2">
-              <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{ width: 44, height: 44 }}>
+              <div
+                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                style={{ width: 44, height: 44 }}
+              >
                 <i className="bi bi-briefcase-fill"></i>
               </div>
               <div>
@@ -73,9 +117,11 @@ const RecruterDashboard = () => {
                   key={item.name}
                   className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${item.active ? "btn-primary text-white" : "btn-light text-muted"}`}
                   onClick={() => {
-                    const offcanvas = document.getElementById("recruiterSidebar");
+                    const offcanvas =
+                      document.getElementById("recruiterSidebar");
                     if (offcanvas) {
-                      const bsOffcanvas = window.bootstrap?.Offcanvas.getInstance(offcanvas);
+                      const bsOffcanvas =
+                        window.bootstrap?.Offcanvas.getInstance(offcanvas);
                       bsOffcanvas?.hide();
                     }
                   }}
@@ -84,6 +130,13 @@ const RecruterDashboard = () => {
                   {item.name}
                 </button>
               ))}
+              <Link
+                to="/recruiter-position"
+                className="btn btn-light text-start d-flex align-items-center"
+              >
+                <i className="bi bi-briefcase me-2"></i>
+                Positions
+              </Link>
             </div>
           </nav>
 
@@ -91,22 +144,41 @@ const RecruterDashboard = () => {
             <div className="card border-0 bg-primary-subtle">
               <div className="card-body">
                 <h6 className="fw-bold mb-1">Grow your hiring pipeline</h6>
-                <p className="small text-muted mb-2">Create better CV-driven campaigns for top talent.</p>
-                <button className="btn btn-outline-primary btn-sm">Upgrade Plan</button>
+                <p className="small text-muted mb-2">
+                  Create better CV-driven campaigns for top talent.
+                </p>
+                <button className="btn btn-outline-primary btn-sm">
+                  Upgrade Plan
+                </button>
               </div>
             </div>
           </div>
         </aside>
 
-        <div className="offcanvas offcanvas-start" tabIndex={-1} id="recruiterSidebar" aria-labelledby="recruiterSidebarLabel">
+        <div
+          className="offcanvas offcanvas-start"
+          tabIndex={-1}
+          id="recruiterSidebar"
+          aria-labelledby="recruiterSidebarLabel"
+        >
           <div className="offcanvas-header border-bottom">
-            <h5 className="offcanvas-title fw-bold" id="recruiterSidebarLabel">Recruiter Menu</h5>
-            <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <h5 className="offcanvas-title fw-bold" id="recruiterSidebarLabel">
+              Recruiter Menu
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
           </div>
           <div className="offcanvas-body p-0">
             <div className="p-3 p-lg-4 border-bottom">
               <div className="d-flex align-items-center gap-2">
-                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{ width: 44, height: 44 }}>
+                <div
+                  className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                  style={{ width: 44, height: 44 }}
+                >
                   <i className="bi bi-briefcase-fill"></i>
                 </div>
                 <div>
@@ -134,8 +206,12 @@ const RecruterDashboard = () => {
               <div className="card border-0 bg-primary-subtle">
                 <div className="card-body">
                   <h6 className="fw-bold mb-1">Grow your hiring pipeline</h6>
-                  <p className="small text-muted mb-2">Create better CV-driven campaigns for top talent.</p>
-                  <button className="btn btn-outline-primary btn-sm">Upgrade Plan</button>
+                  <p className="small text-muted mb-2">
+                    Create better CV-driven campaigns for top talent.
+                  </p>
+                  <button className="btn btn-outline-primary btn-sm">
+                    Upgrade Plan
+                  </button>
                 </div>
               </div>
             </div>
@@ -143,7 +219,7 @@ const RecruterDashboard = () => {
         </div>
 
         <main className="flex-grow-1">
-            <div className="p-3 p-lg-4">
+          <div className="p-3 p-lg-4">
             <div className="row g-4 mb-4">
               {stats.map((item) => (
                 <div className="col-12 col-sm-6 col-xl-3" key={item.title}>
@@ -167,7 +243,9 @@ const RecruterDashboard = () => {
                   <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h5 className="fw-bold mb-0">Recent Applications</h5>
-                      <button className="btn btn-sm btn-outline-primary">View All</button>
+                      <button className="btn btn-sm btn-outline-primary">
+                        View All
+                      </button>
                     </div>
 
                     <div className="table-responsive">
@@ -185,13 +263,21 @@ const RecruterDashboard = () => {
                             <tr key={app.name}>
                               <td>
                                 <div className="d-flex align-items-center gap-2">
-                                  <img src={`https://i.pravatar.cc/36?u=${app.name}`} className="rounded-circle" alt="candidate" />
-                                  <span className="fw-semibold">{app.name}</span>
+                                  <img
+                                    src={`https://i.pravatar.cc/36?u=${app.name}`}
+                                    className="rounded-circle"
+                                    alt="candidate"
+                                  />
+                                  <span className="fw-semibold">
+                                    {app.name}
+                                  </span>
                                 </div>
                               </td>
                               <td>{app.role}</td>
                               <td>
-                                <span className={`badge ${app.status === "Shortlisted" ? "bg-success-subtle text-success" : app.status === "Interview" ? "bg-warning-subtle text-warning" : "bg-secondary-subtle text-secondary"}`}>
+                                <span
+                                  className={`badge ${app.status === "Shortlisted" ? "bg-success-subtle text-success" : app.status === "Interview" ? "bg-warning-subtle text-warning" : "bg-secondary-subtle text-secondary"}`}
+                                >
                                   {app.status}
                                 </span>
                               </td>
@@ -209,9 +295,15 @@ const RecruterDashboard = () => {
                 <div className="card border-0 shadow-sm mb-4">
                   <div className="card-body">
                     <h5 className="fw-bold mb-3">Quick Actions</h5>
-                    <button className="btn btn-primary w-100 mb-2">Post New Job</button>
-                    <button className="btn btn-outline-primary w-100 mb-2">Review CVs</button>
-                    <button className="btn btn-outline-secondary w-100">Schedule Interview</button>
+                    <button className="btn btn-primary w-100 mb-2">
+                      Post New Job
+                    </button>
+                    <button className="btn btn-outline-primary w-100 mb-2">
+                      Review CVs
+                    </button>
+                    <button className="btn btn-outline-secondary w-100">
+                      Schedule Interview
+                    </button>
                   </div>
                 </div>
 
@@ -223,14 +315,18 @@ const RecruterDashboard = () => {
                         <div className="fw-semibold">Sarah Khan</div>
                         <small className="text-muted">10:30 AM</small>
                       </div>
-                      <span className="badge bg-primary-subtle text-primary">Online</span>
+                      <span className="badge bg-primary-subtle text-primary">
+                        Online
+                      </span>
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom py-2">
                       <div>
                         <div className="fw-semibold">Rahim Uddin</div>
                         <small className="text-muted">1:00 PM</small>
                       </div>
-                      <span className="badge bg-success-subtle text-success">Onsite</span>
+                      <span className="badge bg-success-subtle text-success">
+                        Onsite
+                      </span>
                     </div>
                     <div className="d-flex align-items-center justify-content-between py-2">
                       <div>
