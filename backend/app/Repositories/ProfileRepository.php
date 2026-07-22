@@ -17,8 +17,15 @@ class ProfileRepository
             ]
         );
 
-        // info 
+        // info data
         $data = $profile->info ?? [];
+        
+        // user table email and name sync
+        $data['email'] = $user->email;
+        if (empty($data['name']) && !empty($user->name)) {
+            $data['name'] = $user->name;
+        }
+
         $data['id'] = $profile->id;
         $data['user_id'] = $profile->user_id;
         $data['cv_path'] = $profile->cv_path;
@@ -30,7 +37,7 @@ class ProfileRepository
     {
         $profile = CandidateProfile::firstOrCreate(['user_id' => $user->id]);
 
-        // update json data
+        // current json data
         $currentInfo = $profile->info ?? [];
 
         // if first and last name available then update
@@ -40,13 +47,22 @@ class ProfileRepository
             $data['name'] = trim("{$firstName} {$lastName}");
         }
 
+        // email update 
+        if (isset($data['email'])) {
+            unset($data['email']); 
+        }
+
         $mergedInfo = array_merge($currentInfo, $data);
+        
+        // info set email
+        $mergedInfo['email'] = $user->email;
 
         $profile->update([
             'info' => $mergedInfo
         ]);
 
         $result = $mergedInfo;
+        $result['email'] = $user->email; 
         $result['id'] = $profile->id;
         $result['user_id'] = $profile->user_id;
         $result['cv_path'] = $profile->cv_path;
