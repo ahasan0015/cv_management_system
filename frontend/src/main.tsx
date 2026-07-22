@@ -28,6 +28,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AttributePage from "./pages/admin/AttributePage";
 import { Toaster } from "react-hot-toast";
 import PositionsPage from "./pages/recruiter/PositionsPage";
+import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,7 @@ const AppRoute = createBrowserRouter([
   // Public Pages
   { path: "/", element: <Landing /> },
   { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
   // Google Auth Success Route
   { path: "/auth-success", element: <AuthSuccess /> },
   {
@@ -58,6 +61,7 @@ const AppRoute = createBrowserRouter([
     element: <ProtectedRoute allowedRoles={["candidate"]} />,
     children: [{ path: "/candidate-profile", element: <CandidateProfile /> }],
   },
+  { path: "*", element: <NotFound /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(

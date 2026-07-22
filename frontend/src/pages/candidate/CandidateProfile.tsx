@@ -25,7 +25,7 @@ const CandidateProfile = () => {
 
   const [profile, setProfile] = useState<ProfileState>({
     name: user?.name ?? "Loading...",
-    email: user?.email ?? "",
+    email: user?.email ?? "", // Auth context 
     phone: "+880 1700-000000",
     location: "Dhaka, Bangladesh",
     avatar: userAvatar,
@@ -57,7 +57,7 @@ const CandidateProfile = () => {
           setProfile((prev) => ({
             ...prev,
             name: resData.name ?? prev.name,
-            email: resData.email ?? prev.email,
+            email: resData.email ?? user?.email ?? prev.email,
             avatar: fetchedAvatar ? fetchedAvatar : prev.avatar,
             title: resData.title ?? prev.title,
             phone: resData.phone ?? prev.phone,

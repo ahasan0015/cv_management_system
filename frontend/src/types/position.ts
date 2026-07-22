@@ -1,6 +1,6 @@
 // types/position.ts
 
-// Common Pagination Meta Type (যদি attribute.ts থেকে ইমপোর্ট করতে সমস্যা হয়, তবে এখানে ডিফাইন করে নেওয়া নিরাপদ)
+// Common Pagination Meta Type 
 export interface PaginationMeta {
   current_page: number;
   last_page: number;
@@ -38,12 +38,12 @@ export interface TableProps {
   onPageChange: (page: number) => void;
   selectedIds: number[];
   onSelectionChange: (ids: number[]) => void;
-  attributesList?: AttributeOption[]; // টেবিলে অ্যাট্রিবিউটের নাম দেখানোর জন্য এটি জরুরি
+  attributesList?: AttributeOption[]; 
 }
 
 export interface PositionToolbarProps {
   selectedIds: number[];
-  selectedId?: number | null; // Toolbar-এর সুবিধার জন্য অপশনাল রাখা হলো
+  selectedId?: number | null;
   onAdd: () => void;
   onEdit: () => void;
   onDelete: () => void;

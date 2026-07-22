@@ -38,8 +38,10 @@ export interface ProfileState {
 }
 
 export interface AuthUser {
+  id?: number;
   name?: string;
-  email?: string;
+  email?: string; 
+  role?: string;
   avatar?: string;
   profile_photo_url?: string;
 }
@@ -55,7 +57,7 @@ export interface ProfileApiResponse {
   bio?: string;
 }
 
-// নতুন যুক্ত করা হলো ProjectsTab-এর জন্য:
+//  ProjectsTab
 export interface NewProjectState {
   name: string;
   date_start: string;
