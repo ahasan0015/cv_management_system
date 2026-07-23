@@ -308,7 +308,7 @@ export const InfoTab: React.FC<InfoTabProps> = ({
           />
         </div>
 
-        {/* Save Button (এডিট মোড চালু থাকলেই কেবল দেখাবে) */}
+        {/* Save Button  */}
         {isEditing && (
           <div className="col-12 text-end mt-4">
             <button type="submit" className="btn btn-success btn-sm px-4">

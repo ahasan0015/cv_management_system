@@ -4,7 +4,11 @@ import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 
 import { candidateService } from "../../services/candidateService";
-import type { AuthUser, ProfileState, ProjectItem } from "../../types/candidate";
+import type {
+  AuthUser,
+  ProfileState,
+  ProjectItem,
+} from "../../types/candidate";
 
 // Import modular components
 import { MeTab } from "../../components/candidate/MeTab";
@@ -16,7 +20,9 @@ const CandidateProfile = () => {
   const authContext = useAuth() as { user?: AuthUser };
   const user = authContext?.user;
 
-  const [activeTab, setActiveTab] = useState<"me" | "info" | "projects" | "cvs">("me");
+  const [activeTab, setActiveTab] = useState<
+    "me" | "info" | "projects" | "cvs"
+  >("me");
 
   const userAvatar =
     user?.avatar ||
@@ -25,7 +31,7 @@ const CandidateProfile = () => {
 
   const [profile, setProfile] = useState<ProfileState>({
     name: user?.name ?? "Loading...",
-    email: user?.email ?? "", // Auth context 
+    email: user?.email ?? "", // Auth context
     phone: "+880 1700-000000",
     location: "Dhaka, Bangladesh",
     avatar: userAvatar,
@@ -45,24 +51,22 @@ const CandidateProfile = () => {
     tagsInput: "",
   });
 
-  // Load Data on Mount
+ // Load Data on Mount
   useEffect(() => {
     const loadData = async () => {
       try {
         const profileRes = await candidateService.getProfile();
-        if (profileRes?.data) {
-          const resData = profileRes.data;
+        
+        // profileRes.data.data 
+        if (profileRes?.data?.data) {
+          const resData = profileRes.data.data;
           const fetchedAvatar = resData.avatar || resData.profile_photo_url;
 
           setProfile((prev) => ({
             ...prev,
-            name: resData.name ?? prev.name,
+            ...resData, //backend data load
             email: resData.email ?? user?.email ?? prev.email,
             avatar: fetchedAvatar ? fetchedAvatar : prev.avatar,
-            title: resData.title ?? prev.title,
-            phone: resData.phone ?? prev.phone,
-            location: resData.location ?? prev.location,
-            bio: resData.bio ?? prev.bio,
           }));
         }
 
@@ -81,17 +85,20 @@ const CandidateProfile = () => {
     loadData();
   }, [user]);
 
-  // Handle Profile Update
+ // Handle Profile Update
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await candidateService.updateProfile({
-        name: profile.name,
-        title: profile.title,
-        phone: profile.phone,
-        location: profile.location,
-        bio: profile.bio,
-      });
+      const response = await candidateService.updateProfile(profile);
+
+      // state update
+      if (response?.data?.data) {
+        setProfile((prev) => ({
+          ...prev,
+          ...response.data.data,
+        }));
+      }
+
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile", error);
@@ -123,7 +130,13 @@ const CandidateProfile = () => {
 
       if (response?.data?.data) {
         setProjects([response.data.data, ...projects]);
-        setNewProject({ name: "", date_start: "", date_end: "", markdownDescription: "", tagsInput: "" });
+        setNewProject({
+          name: "",
+          date_start: "",
+          date_end: "",
+          markdownDescription: "",
+          tagsInput: "",
+        });
         setShowAddProject(false);
         toast.success("Project added successfully!");
       }
@@ -135,7 +148,8 @@ const CandidateProfile = () => {
 
   // Handle Delete Project
   const handleDeleteProject = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this project?")) return;
+    if (!window.confirm("Are you sure you want to delete this project?"))
+      return;
 
     try {
       await candidateService.deleteProject(id);
@@ -160,19 +174,22 @@ const CandidateProfile = () => {
               alt="Profile"
               style={{ width: 140, height: 140, objectFit: "cover" }}
               onError={(e) => {
-                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || "User")}&background=0d6efd&color=fff`;
+                (e.target as HTMLImageElement).src =
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || "User")}&background=0d6efd&color=fff`;
               }}
             />
             <h4 className="fw-bold">{profile.name}</h4>
-            <p className="text-muted mb-2">{profile.email || "No email provided"}</p>
+            <p className="text-muted mb-2">
+              {profile.email || "No email provided"}
+            </p>
             <p className="text-muted small mb-3">{profile.title}</p>
-            <button 
+            <button
               className={`btn ${activeTab === "me" ? "btn-primary" : "btn-outline-primary"} w-100 mb-2`}
               onClick={() => setActiveTab("me")}
             >
               Edit Profile
             </button>
-            <button 
+            <button
               className={`btn ${activeTab === "cvs" ? "btn-primary" : "btn-outline-primary"} w-100`}
               onClick={() => setActiveTab("cvs")}
             >
@@ -220,12 +237,20 @@ const CandidateProfile = () => {
 
           {/* TAB 1: ME */}
           {activeTab === "me" && (
-            <MeTab profile={profile} setProfile={setProfile} onSubmit={handleUpdateProfile} />
+            <MeTab
+              profile={profile}
+              setProfile={setProfile}
+              onSubmit={handleUpdateProfile}
+            />
           )}
 
           {/* TAB 2: INFO */}
           {activeTab === "info" && (
-            <InfoTab profile={profile} setProfile={setProfile} onSubmit={handleUpdateProfile} />
+            <InfoTab
+              profile={profile}
+              setProfile={setProfile}
+              onSubmit={handleUpdateProfile}
+            />
           )}
 
           {/* TAB 3: PROJECTS */}
@@ -244,7 +269,9 @@ const CandidateProfile = () => {
 
           {/* TAB 4: CVS */}
           {activeTab === "cvs" && (
-            <CvsTab onUpload={() => toast.success("Resume uploaded successfully!")} />
+            <CvsTab
+              onUpload={() => toast.success("Resume uploaded successfully!")}
+            />
           )}
         </div>
       </div>

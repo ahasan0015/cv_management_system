@@ -46,15 +46,36 @@ export interface AuthUser {
   profile_photo_url?: string;
 }
 
+// ProfileApiResponse
 export interface ProfileApiResponse {
-  name?: string;
-  email?: string;
-  avatar?: string;
-  profile_photo_url?: string;
-  title?: string;
-  phone?: string;
-  location?: string;
-  bio?: string;
+  data: {
+    name?: string;
+    email?: string;
+    avatar?: string;
+    profile_photo_url?: string;
+    title?: string;
+    phone?: string;
+    location?: string;
+    bio?: string;
+    first_name?: string;
+    last_name?: string;
+    father_name?: string;
+    mother_name?: string;
+    dob?: string;
+    gender?: string;
+    religion?: string;
+    marital_status?: string;
+    nationality?: string;
+    nid?: string;
+    passport_number?: string;
+    passport_issue_date?: string;
+    alternate_email?: string;
+    secondary_mobile?: string;
+    emergency_contact?: string;
+    blood_group?: string;
+    height?: string;
+    weight?: string;
+  };
 }
 
 //  ProjectsTab
