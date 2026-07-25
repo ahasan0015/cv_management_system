@@ -39,7 +39,9 @@ class GoogleController extends Controller
             'email'  => $user->email,
             'avatar' => $googleUser->avatar // Google  
         ]);
-
+        //for local
         return redirect("http://localhost:5173/auth-success?" . $queryParams);
+        // for hosting
+        // return redirect("https://cvmanage.mencareproduct.com/auth-success?" . $queryParams);
     }
 }
