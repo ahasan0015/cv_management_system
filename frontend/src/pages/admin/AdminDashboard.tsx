@@ -90,6 +90,14 @@ const Dashboard = () => {
                 </button>
               ))}
               <Link
+                to="/admin-user"
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${activeTab === "Attribute Library" ? "btn-primary text-white" : "btn-light text-muted"}`}
+                onClick={() => setActiveTab("Attribute Library")}
+              >
+                <i className="bi bi-stack me-2"></i>
+                Admin User Manage
+              </Link>
+              <Link
                 to="/attributes"
                 className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${activeTab === "Attribute Library" ? "btn-primary text-white" : "btn-light text-muted"}`}
                 onClick={() => setActiveTab("Attribute Library")}

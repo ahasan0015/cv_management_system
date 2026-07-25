@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { usePositions, useDuplicatePosition } from "../../hooks/usePosition";
+
 import { positionService } from "../../services/positionService";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { PositionToolbar } from "../../components/PositionToolbar";
 import { PositionTable } from "../../components/PositionTable";
-
+import { usePositions, useDuplicatePosition } from "../../hooks/usePosition";
 import type { Position } from "../../types/position";
 import { useAttributes } from "../../hooks/useAttributes";
 import type { PositionFormData } from "../../types/positionModal";

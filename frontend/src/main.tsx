@@ -30,6 +30,7 @@ import { Toaster } from "react-hot-toast";
 import PositionsPage from "./pages/recruiter/PositionsPage";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +45,10 @@ const AppRoute = createBrowserRouter([
   { path: "/auth-success", element: <AuthSuccess /> },
   {
     element: <ProtectedRoute allowedRoles={["admin"]} />,
-    children: [{ path: "/admin-dashboard", element: <AdminDashboard /> }],
+    children: [
+      { path: "/admin-dashboard", element: <AdminDashboard /> },
+      { path: "/admin-user", element: <AdminUsers /> }
+    ],
   },
   {
     element: <ProtectedRoute allowedRoles={["recruiter"]} />,
