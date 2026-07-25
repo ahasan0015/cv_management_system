@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AttributeTypeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CandidateProfileController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\ProjectController;
 
@@ -17,6 +18,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/attributes', [AttributeController::class, 'index']);
 Route::get('/attribute-types', [AttributeTypeController::class, 'index']);
+//dashboardRoute
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 // Position routes
 Route::apiResource('positions', PositionController::class);
