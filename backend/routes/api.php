@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AttributeController;
 use App\Http\Controllers\Api\AttributeTypeController;
 use App\Http\Controllers\Api\AuthController;
@@ -51,4 +52,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{id}', [ProjectController::class, 'show']);
     Route::put('/projects/{id}', [ProjectController::class, 'update']);
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+
+    //user routes
+    Route::get('/users', [AdminController::class, 'index']);
+    Route::get('/roles', [AdminController::class, 'getRoles']);
+    Route::patch('/users/{user}/role', [AdminController::class, 'updateRole']);
+    Route::patch('/users/{user}/status', [AdminController::class, 'updateStatus']);
+    Route::delete('/users/{user}', [AdminController::class, 'destroy']);
 });
