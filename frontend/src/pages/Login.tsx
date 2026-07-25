@@ -53,7 +53,7 @@ const Login = () => {
 
   return (
     <div className="container-fluid vh-100">
-      <Navbar/>
+      <Navbar />
       <div className="row h-100">
         {/* Left Side */}
         <div className="col-lg-6 d-none d-lg-flex bg-primary text-white align-items-center justify-content-center">
@@ -145,7 +145,7 @@ const Login = () => {
                 <span className="text-muted">OR</span>
               </div>
 
-             
+              {/* for local */}
               {/* Social Login - Updated Button */}
               <a
                 href="http://localhost:8000/auth/google"
@@ -153,6 +153,12 @@ const Login = () => {
               >
                 <i className="bi bi-google me-2"></i> Continue with Google
               </a>
+
+              {/* for porduction */}
+              {/* <a
+                href="https://cvmanageapi.mencareproduct.com/auth/google"
+                className="btn btn-outline-danger w-100 mb-2 text-decoration-none"
+              ></a> */}
               <button
                 type="button"
                 className="btn btn-outline-primary w-100 mb-2"
