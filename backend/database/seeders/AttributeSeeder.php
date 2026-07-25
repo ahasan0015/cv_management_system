@@ -9,9 +9,9 @@ class AttributeSeeder extends Seeder
 {
     public function run(): void
     {
-        // ক্যাটাগরি আইডি এবং টাইপ আইডি ধরে ডাটা ইনসার্ট করুন
-        // ধরি: 1=Personal, 2=Education, 3=Experience, 4=Skills, 5=Portfolio
-        // টাইপ আইডি: 1=string, 2=markdown, 3=image, 4=number, 5=date
+        
+        //  1=Personal, 2=Education, 3=Experience, 4=Skills, 5=Portfolio
+        // type id 1=string, 2=markdown, 3=image, 4=number, 5=date
         
         DB::table('attributes')->insert([
             ['name' => 'Full Name', 'category_id' => 1, 'attribute_type_id' => 1, 'version' => 1],

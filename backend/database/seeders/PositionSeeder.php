@@ -12,48 +12,47 @@ class PositionSeeder extends Seeder
     {
         $attributes = Attribute::all();
 
-        for ($i = 1; $i <= 20; $i++) {
+        $titles = [
+            'Full Stack Web Developer',
+            'Laravel & React Developer',
+            'Frontend Engineer',
+            'Backend Developer',
+            'DevOps Specialist',
+            'Vue.js Developer',
+            'Node.js Engineer',
+            'Software Quality Assurance',
+            'UI/UX Designer',
+            'Junior PHP Developer'
+        ];
+
+        $rolesList = ['Frontend Dev', 'Backend Dev', 'Full Stack Dev', 'QA Engineer', 'DevOps Engineer'];
+        $tagsList = ['Laravel', 'React', 'Vue', 'Angular', 'Node.js', 'PHP', 'TypeScript', 'JavaScript', 'Tailwind', 'Bootstrap', 'MySQL', 'PostgreSQL', 'Docker'];
+
+        for ($i = 0; $i < 20; $i++) {
+            $titleIndex = $i % count($titles);
 
             $position = Position::create([
-                'title' => fake()->jobTitle(),
-                'description' => fake()->paragraph(3),
-                'max_project_count' => fake()->numberBetween(1, 10),
-                'start_date' => fake()->dateTimeBetween('-1 month', '+1 month'),
-                'end_date' => fake()->dateTimeBetween('+2 months', '+12 months'),
+                'title' => $titles[$titleIndex] . ' (' . ($i + 1) . ')',
+                'description' => 'This is a professional position description for the role. We are looking for a passionate developer with strong problem-solving skills and experience in modern web technologies.',
+                'max_project_count' => ($i % 5) + 2,
+                'start_date' => now()->subDays(($i % 10) + 1),
+                'end_date' => now()->addMonths(($i % 5) + 2),
                 'access_rules' => [
-                    'min_experience' => fake()->numberBetween(0, 10),
-                    'roles' => fake()->randomElements([
-                        'Frontend Dev',
-                        'Backend Dev',
-                        'Full Stack Dev',
-                        'QA Engineer',
-                        'DevOps Engineer',
-                    ], fake()->numberBetween(1, 3)),
+                    'min_experience' => ($i % 4),
+                    'roles' => [$rolesList[$i % count($rolesList)], $rolesList[($i + 1) % count($rolesList)]],
                 ],
-                'project_tags' => fake()->randomElements([
-                    'Laravel',
-                    'React',
-                    'Vue',
-                    'Angular',
-                    'Node.js',
-                    'PHP',
-                    'TypeScript',
-                    'JavaScript',
-                    'Tailwind',
-                    'Bootstrap',
-                    'MySQL',
-                    'PostgreSQL',
-                    'REST API',
-                    'GraphQL',
-                    'Docker',
-                ], fake()->numberBetween(2, 5)),
+                'project_tags' => [
+                    $tagsList[$i % count($tagsList)],
+                    $tagsList[($i + 3) % count($tagsList)],
+                    $tagsList[($i + 5) % count($tagsList)]
+                ],
             ]);
 
-            // Attach 1-5 random attributes
+            // Attach random attributes
             if ($attributes->count() > 0) {
                 $position->attributeList()->attach(
                     $attributes
-                        ->random(min(fake()->numberBetween(1, 5), $attributes->count()))
+                        ->random(min(3, $attributes->count()))
                         ->pluck('id')
                         ->toArray()
                 );

@@ -19,6 +19,8 @@ return new class extends Migration
             // for socail loging
             $table->string('provider')->nullable(); 
             $table->string('provider_id')->nullable();
+
+            $table->string('status')->default('Active'); // Active or Blocked 
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
