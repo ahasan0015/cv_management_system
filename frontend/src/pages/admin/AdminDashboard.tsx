@@ -5,39 +5,11 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
 
-  const menuItems = [
-    { name: "Dashboard", icon: "bi-speedometer2" },
-    { name: "Users", icon: "bi-people" },
-    { name: "CVs", icon: "bi-file-earmark-person" },
-    { name: "Jobs", icon: "bi-briefcase" },
-    { name: "Reports", icon: "bi-bar-chart-line" },
-    { name: "Settings", icon: "bi-gear" },
-  ];
-
-  const stats = [
-    { title: "Total Users", value: "2,450", change: "+12%", color: "primary" },
-    { title: "Verified CVs", value: "1,318", change: "+8%", color: "success" },
-    { title: "Active Jobs", value: "46", change: "+4%", color: "warning" },
-    { title: "New Signups", value: "124", change: "+15%", color: "info" },
-  ];
-
-  const recentUsers = [
-    { name: "Nadia Rahman", role: "Candidate", status: "Active" },
-    { name: "Arif Hossain", role: "Recruiter", status: "Pending" },
-    { name: "Mim Akter", role: "Candidate", status: "Active" },
-  ];
-
-  const quickActions = [
-    { label: "Manage Users", icon: "bi-people-fill" },
-    { label: "Review CVs", icon: "bi-file-earmark-richtext" },
-    { label: "Create Job", icon: "bi-plus-circle" },
-  ];
-
   return (
-    <div className="min-vh-100 bg-light">
+    <div className="min-vh-100 bg-body">
       <Navbar />
       <div className="d-flex flex-column flex-lg-row">
-        <div className="d-lg-none p-3 bg-white border-bottom">
+        <div className="d-lg-none p-3 bg-body border-bottom">
           <button
             className="btn btn-outline-primary w-100 d-flex align-items-center justify-content-between"
             type="button"
@@ -51,7 +23,7 @@ const Dashboard = () => {
         </div>
 
         <aside
-          className="bg-white border-bottom border-lg-end shadow-sm d-none d-lg-block"
+          className="bg-body border-bottom border-lg-end shadow-sm d-none d-lg-block"
           style={{ width: "100%", maxWidth: 270 }}
         >
           <div className="p-3 p-lg-4 border-bottom">
@@ -71,27 +43,80 @@ const Dashboard = () => {
 
           <nav className="p-3">
             <div className="d-flex flex-wrap flex-lg-column gap-2">
-              {menuItems.map((item) => (
-                <button
-                  key={item.name}
-                  className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${activeTab === item.name ? "btn-primary text-white" : "btn-light text-muted"}`}
-                  onClick={() => {
-                    setActiveTab(item.name);
-                    const offcanvas = document.getElementById("adminSidebar");
-                    if (offcanvas) {
-                      const bsOffcanvas =
-                        window.bootstrap?.Offcanvas.getInstance(offcanvas);
-                      bsOffcanvas?.hide();
-                    }
-                  }}
-                >
-                  <i className={`bi ${item.icon} me-2`}></i>
-                  {item.name}
-                </button>
-              ))}
+              <button
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Dashboard"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
+                onClick={() => setActiveTab("Dashboard")}
+              >
+                <i className="bi bi-speedometer2 me-2"></i>
+                Dashboard
+              </button>
+              <button
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Users"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
+                onClick={() => setActiveTab("Users")}
+              >
+                <i className="bi bi-people me-2"></i>
+                Users
+              </button>
+              <button
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "CVs"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
+                onClick={() => setActiveTab("CVs")}
+              >
+                <i className="bi bi-file-earmark-person me-2"></i>
+                CVs
+              </button>
+              <button
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Jobs"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
+                onClick={() => setActiveTab("Jobs")}
+              >
+                <i className="bi bi-briefcase me-2"></i>
+                Jobs
+              </button>
+              <button
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Reports"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
+                onClick={() => setActiveTab("Reports")}
+              >
+                <i className="bi bi-bar-chart-line me-2"></i>
+                Reports
+              </button>
+              <button
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Settings"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
+                onClick={() => setActiveTab("Settings")}
+              >
+                <i className="bi bi-gear me-2"></i>
+                Settings
+              </button>
+
               <Link
                 to="/admin-user"
-                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${activeTab === "Attribute Library" ? "btn-primary text-white" : "btn-light text-muted"}`}
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Attribute Library"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
                 onClick={() => setActiveTab("Attribute Library")}
               >
                 <i className="bi bi-stack me-2"></i>
@@ -99,7 +124,11 @@ const Dashboard = () => {
               </Link>
               <Link
                 to="/attributes"
-                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${activeTab === "Attribute Library" ? "btn-primary text-white" : "btn-light text-muted"}`}
+                className={`btn text-start d-flex align-items-center justify-content-start flex-grow-1 flex-lg-grow-0 ${
+                  activeTab === "Attribute Library"
+                    ? "btn-primary text-white"
+                    : "btn-outline-secondary border-0 text-body"
+                }`}
                 onClick={() => setActiveTab("Attribute Library")}
               >
                 <i className="bi bi-stack me-2"></i>
@@ -109,7 +138,7 @@ const Dashboard = () => {
           </nav>
 
           <div className="p-3 border-top">
-            <div className="card border-0 bg-primary-subtle">
+            <div className="card border-0 bg-primary-subtle text-dark">
               <div className="card-body">
                 <h6 className="fw-bold mb-1">System health</h6>
                 <p className="small text-muted mb-2">
@@ -124,7 +153,7 @@ const Dashboard = () => {
         </aside>
 
         <div
-          className="offcanvas offcanvas-start"
+          className="offcanvas offcanvas-start bg-body"
           tabIndex={-1}
           id="adminSidebar"
           aria-labelledby="adminSidebarLabel"
@@ -158,21 +187,77 @@ const Dashboard = () => {
 
             <nav className="p-3">
               <div className="d-flex flex-column gap-2">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.name}
-                    className={`btn text-start d-flex align-items-center justify-content-start ${activeTab === item.name ? "btn-primary text-white" : "btn-light text-muted"}`}
-                    onClick={() => setActiveTab(item.name)}
-                  >
-                    <i className={`bi ${item.icon} me-2`}></i>
-                    {item.name}
-                  </button>
-                ))}
+                <button
+                  className={`btn text-start d-flex align-items-center justify-content-start ${
+                    activeTab === "Dashboard"
+                      ? "btn-primary text-white"
+                      : "btn-outline-secondary border-0 text-body"
+                  }`}
+                  onClick={() => setActiveTab("Dashboard")}
+                >
+                  <i className="bi bi-speedometer2 me-2"></i>
+                  Dashboard
+                </button>
+                <button
+                  className={`btn text-start d-flex align-items-center justify-content-start ${
+                    activeTab === "Users"
+                      ? "btn-primary text-white"
+                      : "btn-outline-secondary border-0 text-body"
+                  }`}
+                  onClick={() => setActiveTab("Users")}
+                >
+                  <i className="bi bi-people me-2"></i>
+                  Users
+                </button>
+                <button
+                  className={`btn text-start d-flex align-items-center justify-content-start ${
+                    activeTab === "CVs"
+                      ? "btn-primary text-white"
+                      : "btn-outline-secondary border-0 text-body"
+                  }`}
+                  onClick={() => setActiveTab("CVs")}
+                >
+                  <i className="bi bi-file-earmark-person me-2"></i>
+                  CVs
+                </button>
+                <button
+                  className={`btn text-start d-flex align-items-center justify-content-start ${
+                    activeTab === "Jobs"
+                      ? "btn-primary text-white"
+                      : "btn-outline-secondary border-0 text-body"
+                  }`}
+                  onClick={() => setActiveTab("Jobs")}
+                >
+                  <i className="bi bi-briefcase me-2"></i>
+                  Jobs
+                </button>
+                <button
+                  className={`btn text-start d-flex align-items-center justify-content-start ${
+                    activeTab === "Reports"
+                      ? "btn-primary text-white"
+                      : "btn-outline-secondary border-0 text-body"
+                  }`}
+                  onClick={() => setActiveTab("Reports")}
+                >
+                  <i className="bi bi-bar-chart-line me-2"></i>
+                  Reports
+                </button>
+                <button
+                  className={`btn text-start d-flex align-items-center justify-content-start ${
+                    activeTab === "Settings"
+                      ? "btn-primary text-white"
+                      : "btn-outline-secondary border-0 text-body"
+                  }`}
+                  onClick={() => setActiveTab("Settings")}
+                >
+                  <i className="bi bi-gear me-2"></i>
+                  Settings
+                </button>
               </div>
             </nav>
 
             <div className="p-3 border-top">
-              <div className="card border-0 bg-primary-subtle">
+              <div className="card border-0 bg-primary-subtle text-dark">
                 <div className="card-body">
                   <h6 className="fw-bold mb-1">System health</h6>
                   <p className="small text-muted mb-2">
@@ -190,27 +275,59 @@ const Dashboard = () => {
         <main className="flex-grow-1">
           <div className="p-3 p-lg-4">
             <div className="row g-4 mb-4">
-              {stats.map((item) => (
-                <div className="col-12 col-sm-6 col-xl-3" key={item.title}>
-                  <div className="card border-0 shadow-sm h-100">
-                    <div className="card-body">
-                      <div className={`text-${item.color} mb-2`}>
-                        <i className="bi bi-circle-fill small"></i>
-                      </div>
-                      <p className="text-muted mb-1 small">{item.title}</p>
-                      <h3 className="fw-bold mb-1">{item.value}</h3>
-                      <small className="text-muted">
-                        {item.change} this month
-                      </small>
+              <div className="col-12 col-sm-6 col-xl-3">
+                <div className="card border-0 shadow-sm h-100 bg-body">
+                  <div className="card-body">
+                    <div className="text-primary mb-2">
+                      <i className="bi bi-circle-fill small"></i>
                     </div>
+                    <p className="text-muted mb-1 small">Total Users</p>
+                    <h3 className="fw-bold mb-1">2,450</h3>
+                    <small className="text-muted">+12% this month</small>
                   </div>
                 </div>
-              ))}
+              </div>
+              <div className="col-12 col-sm-6 col-xl-3">
+                <div className="card border-0 shadow-sm h-100 bg-body">
+                  <div className="card-body">
+                    <div className="text-success mb-2">
+                      <i className="bi bi-circle-fill small"></i>
+                    </div>
+                    <p className="text-muted mb-1 small">Verified CVs</p>
+                    <h3 className="fw-bold mb-1">1,318</h3>
+                    <small className="text-muted">+8% this month</small>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6 col-xl-3">
+                <div className="card border-0 shadow-sm h-100 bg-body">
+                  <div className="card-body">
+                    <div className="text-warning mb-2">
+                      <i className="bi bi-circle-fill small"></i>
+                    </div>
+                    <p className="text-muted mb-1 small">Active Jobs</p>
+                    <h3 className="fw-bold mb-1">46</h3>
+                    <small className="text-muted">+4% this month</small>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-6 col-xl-3">
+                <div className="card border-0 shadow-sm h-100 bg-body">
+                  <div className="card-body">
+                    <div className="text-info mb-2">
+                      <i className="bi bi-circle-fill small"></i>
+                    </div>
+                    <p className="text-muted mb-1 small">New Signups</p>
+                    <h3 className="fw-bold mb-1">124</h3>
+                    <small className="text-muted">+15% this month</small>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="row g-4">
               <div className="col-12 col-xl-8">
-                <div className="card border-0 shadow-sm">
+                <div className="card border-0 shadow-sm bg-body">
                   <div className="card-body">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h5 className="fw-bold mb-0">Recent User Activity</h5>
@@ -220,7 +337,7 @@ const Dashboard = () => {
                     </div>
 
                     <div className="table-responsive">
-                      <table className="table align-middle mb-0">
+                      <table className="table align-middle mb-0 text-body">
                         <thead>
                           <tr>
                             <th>User</th>
@@ -230,24 +347,48 @@ const Dashboard = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {recentUsers.map((userItem) => (
-                            <tr key={userItem.name}>
-                              <td className="fw-semibold">{userItem.name}</td>
-                              <td>{userItem.role}</td>
-                              <td>
-                                <span
-                                  className={`badge ${userItem.status === "Active" ? "bg-success-subtle text-success" : "bg-warning-subtle text-warning"}`}
-                                >
-                                  {userItem.status}
-                                </span>
-                              </td>
-                              <td>
-                                <button className="btn btn-sm btn-outline-secondary">
-                                  Manage
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
+                          <tr>
+                            <td className="fw-semibold">Nadia Rahman</td>
+                            <td>Candidate</td>
+                            <td>
+                              <span className="badge bg-success-subtle text-success">
+                                Active
+                              </span>
+                            </td>
+                            <td>
+                              <button className="btn btn-sm btn-outline-secondary">
+                                Manage
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="fw-semibold">Arif Hossain</td>
+                            <td>Recruiter</td>
+                            <td>
+                              <span className="badge bg-warning-subtle text-warning">
+                                Pending
+                              </span>
+                            </td>
+                            <td>
+                              <button className="btn btn-sm btn-outline-secondary">
+                                Manage
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="fw-semibold">Mim Akter</td>
+                            <td>Candidate</td>
+                            <td>
+                              <span className="badge bg-success-subtle text-success">
+                                Active
+                              </span>
+                            </td>
+                            <td>
+                              <button className="btn btn-sm btn-outline-secondary">
+                                Manage
+                              </button>
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -256,22 +397,25 @@ const Dashboard = () => {
               </div>
 
               <div className="col-12 col-xl-4">
-                <div className="card border-0 shadow-sm mb-4">
+                <div className="card border-0 shadow-sm mb-4 bg-body">
                   <div className="card-body">
                     <h5 className="fw-bold mb-3">Quick Actions</h5>
-                    {quickActions.map((item) => (
-                      <button
-                        key={item.label}
-                        className="btn btn-primary w-100 mb-2 d-flex align-items-center justify-content-center gap-2"
-                      >
-                        <i className={`bi ${item.icon}`}></i>
-                        {item.label}
-                      </button>
-                    ))}
+                    <button className="btn btn-primary w-100 mb-2 d-flex align-items-center justify-content-center gap-2">
+                      <i className="bi bi-people-fill"></i>
+                      Manage Users
+                    </button>
+                    <button className="btn btn-primary w-100 mb-2 d-flex align-items-center justify-content-center gap-2">
+                      <i className="bi bi-file-earmark-richtext"></i>
+                      Review CVs
+                    </button>
+                    <button className="btn btn-primary w-100 mb-2 d-flex align-items-center justify-content-center gap-2">
+                      <i className="bi bi-plus-circle"></i>
+                      Create Job
+                    </button>
                   </div>
                 </div>
 
-                <div className="card border-0 shadow-sm">
+                <div className="card border-0 shadow-sm bg-body">
                   <div className="card-body">
                     <h5 className="fw-bold mb-3">Platform Highlights</h5>
                     <ul className="list-unstyled mb-0">

@@ -31,6 +31,7 @@ import PositionsPage from "./pages/recruiter/PositionsPage";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import AdminUsers from "./pages/admin/AdminUsers";
+import { SettingsProvider } from "./context/SettingsContext";
 
 const queryClient = new QueryClient();
 
@@ -71,8 +72,10 @@ const AppRoute = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+    <SettingsProvider>
       <Toaster position="top-right" reverseOrder={false} />
       <RouterProvider router={AppRoute} />
+    </SettingsProvider>
     </AuthProvider>
   </QueryClientProvider>,
 );
