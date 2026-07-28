@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->json('info')->nullable();
             $table->string('cv_path')->nullable();
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }

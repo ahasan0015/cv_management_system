@@ -11,12 +11,14 @@ class CandidateProfile extends Model
     protected $fillable = [
         'user_id', 
         'info', 
-        'cv_path'
+        'cv_path',
+        'is_published'
     ];
 
     // JSON fields into array
     protected $casts = [
         'info' => 'array',
+        'is_published' => 'boolean'
     ];
 
     // relation

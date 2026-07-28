@@ -1,34 +1,33 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\CandidateProfile;
 
-class ProfileRepository
+
+class ProfileRepository implements ProfileRepositoryInterface
 {
     public function getProfile($user)
     {
-        $profile = CandidateProfile::firstOrCreate(
+        $profile = CandidateProfile::with('projects')->firstOrCreate(
             ['user_id' => $user->id],
             [
-                'info' => [
-                    'name' => $user->name ?? 'Candidate',
-                    'email' => $user->email,
-                ]
+                'info' => [],
+                'is_published' => false
             ]
         );
 
-        // info data
         $data = $profile->info ?? [];
         
-        // user table email and name sync
+        // Single Source of Truth: users table name and email
+        $data['name'] = $user->name;
         $data['email'] = $user->email;
-        if (empty($data['name']) && !empty($user->name)) {
-            $data['name'] = $user->name;
-        }
-
+        
         $data['id'] = $profile->id;
         $data['user_id'] = $profile->user_id;
         $data['cv_path'] = $profile->cv_path;
+        $data['is_published'] = (bool) $profile->is_published;
+        $data['projects'] = $profile->projects;
 
         return $data;
     }
@@ -37,35 +36,41 @@ class ProfileRepository
     {
         $profile = CandidateProfile::firstOrCreate(['user_id' => $user->id]);
 
-        // current json data
         $currentInfo = $profile->info ?? [];
 
-        // if first and last name available then update
-        if (isset($data['first_name']) || isset($data['last_name'])) {
-            $firstName = $data['first_name'] ?? ($currentInfo['first_name'] ?? '');
-            $lastName = $data['last_name'] ?? ($currentInfo['last_name'] ?? '');
-            $data['name'] = trim("{$firstName} {$lastName}");
+        // Handle is_published column update
+        if (isset($data['is_published'])) {
+            $profile->is_published = filter_var($data['is_published'], FILTER_VALIDATE_BOOLEAN);
+            $profile->save();
+            unset($data['is_published']); 
         }
 
-        // email update 
+        // name update
+        if (isset($data['name'])) {
+            $user->update(['name' => $data['name']]);
+            unset($data['name']);
+        }
+
+        // email 
         if (isset($data['email'])) {
             unset($data['email']); 
         }
 
         $mergedInfo = array_merge($currentInfo, $data);
-        
-        // info set email
-        $mergedInfo['email'] = $user->email;
 
         $profile->update([
             'info' => $mergedInfo
         ]);
 
+        // response
         $result = $mergedInfo;
-        $result['email'] = $user->email; 
+        $result['name'] = $user->name; // users 
+        $result['email'] = $user->email; // users 
         $result['id'] = $profile->id;
         $result['user_id'] = $profile->user_id;
         $result['cv_path'] = $profile->cv_path;
+        $result['is_published'] = (bool) $profile->is_published;
+        $result['projects'] = $profile->projects;
 
         return $result;
     }

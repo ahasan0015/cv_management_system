@@ -6,6 +6,8 @@ use App\Repositories\AttributeRepository;
 use App\Repositories\AttributeRepositoryInterface;
 use App\Repositories\DashboardRepository;
 use App\Repositories\DashboardRepositoryInterface;
+use App\Repositories\ProfileRepository;
+use App\Repositories\ProfileRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
@@ -18,11 +20,11 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-        AttributeRepositoryInterface::class,
-        AttributeRepository::class
-    );
+            AttributeRepositoryInterface::class,
+            AttributeRepository::class
+        );
 
-    // Dashboard Repository Binding
+        // Dashboard Repository Binding
         $this->app->bind(
             DashboardRepositoryInterface::class,
             DashboardRepository::class
@@ -31,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             UserRepositoryInterface::class,
             UserRepository::class
+        );
+
+        $this->app->bind(
+            ProfileRepositoryInterface::class,
+            ProfileRepository::class
         );
     }
 
