@@ -9,11 +9,11 @@ class Attribute extends Model
     protected $fillable = ['name', 'category_id', 'attribute_type_id', 'version'];
 
     public function category() {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function attributeType() {
-        return $this->belongsTo(\App\Models\AttributeType::class, 'attribute_type_id');
+        return $this->belongsTo(AttributeType::class, 'attribute_type_id');
     }
 
     public function scopeSearch($query, $search)

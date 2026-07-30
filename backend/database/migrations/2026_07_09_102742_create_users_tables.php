@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('role_id')->nullable()->constrained();
             $table->string('email')->unique();
+            $table->string('avatar')->nullable();
             // for socail loging
             $table->string('provider')->nullable(); 
             $table->string('provider_id')->nullable();

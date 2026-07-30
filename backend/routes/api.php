@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profile Routes
     Route::get('/candidate/profile', [CandidateProfileController::class, 'show']);
     Route::put('/candidate/profile', [CandidateProfileController::class, 'update']);
+    Route::post('/candidate/avatar', [CandidateProfileController::class, 'uploadAvatar']);
 
     // Projects CRUD Routes 
     Route::get('/projects', [ProjectController::class, 'index']);

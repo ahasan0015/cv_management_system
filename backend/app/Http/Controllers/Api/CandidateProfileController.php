@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CandidateProfileResource;
 use App\Repositories\ProfileRepositoryInterface;
+use Cloudinary\Api\Upload\UploadApi;
+use Cloudinary\Configuration\Configuration;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+
 
 class CandidateProfileController extends Controller
 {
@@ -29,25 +32,11 @@ class CandidateProfileController extends Controller
         $user = $request->user();
 
         $validated = $request->validate([
-            'father_name'       => 'nullable|string|max:255',
-            'mother_name'       => 'nullable|string|max:255',
-            'dob'               => 'nullable|date',
-            'gender'            => 'sometimes|required|string|max:50',
-            'religion'          => 'nullable|string|max:50',
-            'marital_status'    => 'nullable|string|max:50',
-            'nationality'       => 'nullable|string|max:100',
-            'nid'               => 'nullable|string|max:100',
-            'title'             => 'sometimes|required|string|max:255',
-            'phone'             => 'nullable|string|regex:/^[0-9+]+$/|max:11',
-            'secondary_mobile'  => 'nullable|string|max:50',
-            'email'             => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'alternate_email'   => 'nullable|email|max:255',
-            'emergency_contact' => 'nullable|string|max:50',
-            'blood_group'       => 'nullable|string|max:10',
-            'location'          => 'sometimes|required|string|max:255',
-            'bio'               => 'nullable|string',
-            'is_published'      => 'sometimes|boolean',
-            'name'              => 'sometimes|required|string|max:255',
+            'name'         => 'sometimes|required|string|max:255',
+            'email'        => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'is_published' => 'sometimes|boolean',
+            'attributes'   => 'sometimes|array', // [attribute_id => value] 
+            'attributes.*' => 'nullable|string', // 
         ]);
 
         if (isset($validated['email'])) {
@@ -60,5 +49,59 @@ class CandidateProfileController extends Controller
 
         return (new CandidateProfileResource($updatedProfile))
             ->additional(['message' => 'Profile updated successfully!']);
+    }
+
+    /**
+     * Avatar Upload Method
+     */
+public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        try {
+            Configuration::instance([
+                'cloud' => [
+                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                    'api_key'    => env('CLOUDINARY_API_KEY'),
+                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+                ],
+                'url' => [
+                    'secure' => true
+                ]
+            ]);
+
+            $uploadedFile = (new UploadApi())->upload(
+                $request->file('avatar')->getRealPath(),
+                ['folder' => 'candidate_avatars']
+            );
+
+            $cloudUrl = $uploadedFile['secure_url'] ?? null;
+
+            if (!$cloudUrl) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to get secure URL from Cloudinary'
+                ], 500);
+            }
+
+            $user = $request->user();
+            $user->avatar = $cloudUrl;
+            $user->save();
+
+            $profileData = $this->profileRepository->getProfile($user);
+
+            return (new CandidateProfileResource($profileData))->additional([
+                'success' => true,
+                'message' => 'Profile image uploaded successfully to cloud'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
