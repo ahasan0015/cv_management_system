@@ -64,7 +64,9 @@ const AppRoute = createBrowserRouter([
   },
   {
     element: <ProtectedRoute allowedRoles={["candidate"]} />,
-    children: [{ path: "/candidate-profile", element: <CandidateProfile /> }],
+    children: [
+      { path: "/candidate-profile", element: <CandidateProfile /> },
+    ],
   },
   { path: "*", element: <NotFound /> },
 ]);

@@ -1,4 +1,7 @@
-// src/types/candidate.ts
+// --- Info Tab Specific Union Types ---
+export type GenderType = "Male" | "Female" | "Other" | "";
+export type MaritalStatusType = "Single" | "Married" | "Divorced" | "";
+export type BloodGroupType = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | "";
 
 export interface ProjectItem {
   id: number;
@@ -10,32 +13,36 @@ export interface ProjectItem {
 }
 
 export interface ProfileState {
+  id?: number;
+  user_id?: number;
   name: string;
-  first_name?: string;
-  last_name?: string;
+  email: string;
+  is_published?: boolean;
+  cv_path?: string | null;
+  projects?: ProjectItem[];
+  
+  // Info Tab Fields (Updated with strict types where applicable)
   father_name?: string;
   mother_name?: string;
   dob?: string;
-  gender?: string;
+  gender?: GenderType;
   religion?: string;
-  marital_status?: string;
+  marital_status?: MaritalStatusType;
   nationality?: string;
   nid?: string;
-  passport_number?: string;
-  passport_issue_date?: string;
-  email: string;
-  alternate_email?: string;
-  phone: string;
+  title?: string;
+  phone?: string;
   secondary_mobile?: string;
+  alternate_email?: string;
   emergency_contact?: string;
-  blood_group?: string;
-  height?: string;
-  weight?: string;
-  location: string;
-  avatar: string;
-  title: string;
-  bio: string;
+  blood_group?: BloodGroupType;
+  location?: string;
+  bio?: string;
+  
+  [key: string]: any;
 }
+
+export type ProfileResponse = ProfileState;
 
 export interface AuthUser {
   id?: number;
@@ -46,39 +53,10 @@ export interface AuthUser {
   profile_photo_url?: string;
 }
 
-// ProfileApiResponse
 export interface ProfileApiResponse {
-  data: {
-    name?: string;
-    email?: string;
-    avatar?: string;
-    profile_photo_url?: string;
-    title?: string;
-    phone?: string;
-    location?: string;
-    bio?: string;
-    first_name?: string;
-    last_name?: string;
-    father_name?: string;
-    mother_name?: string;
-    dob?: string;
-    gender?: string;
-    religion?: string;
-    marital_status?: string;
-    nationality?: string;
-    nid?: string;
-    passport_number?: string;
-    passport_issue_date?: string;
-    alternate_email?: string;
-    secondary_mobile?: string;
-    emergency_contact?: string;
-    blood_group?: string;
-    height?: string;
-    weight?: string;
-  };
+  data: ProfileState;
 }
 
-//  ProjectsTab
 export interface NewProjectState {
   name: string;
   date_start: string;
@@ -96,4 +74,19 @@ export interface ProjectsTabProps {
   setNewProject: React.Dispatch<React.SetStateAction<NewProjectState>>;
   handleAddProject: (e: React.FormEvent) => void;
   handleDeleteProject: (id: number) => void;
+}
+
+// --- InfoTab Props Interface ---
+export interface InfoTabProps {
+  profile: ProfileState;
+  setProfile: React.Dispatch<React.SetStateAction<ProfileState>>;
+  isEditing: boolean;
+  setIsEditing: (editing: boolean) => void;
+}
+
+// DynamicCvTab Props
+export interface DynamicCvTabProps {
+  profile: ProfileState;
+  projects: ProjectItem[];
+  hasPermission: boolean;
 }

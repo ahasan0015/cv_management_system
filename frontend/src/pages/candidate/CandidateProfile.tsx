@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
@@ -15,14 +15,17 @@ import { MeTab } from "../../components/candidate/MeTab";
 import { InfoTab } from "../../components/candidate/InfoTab";
 import { ProjectsTab } from "../../components/candidate/ProjectsTab";
 import { CvsTab } from "../../components/candidate/CvsTab";
+import { DynamicCvTab } from "../../components/candidate/DynamicCvTab";
 
 const CandidateProfile = () => {
   const authContext = useAuth() as { user?: AuthUser };
   const user = authContext?.user;
 
   const [activeTab, setActiveTab] = useState<
-    "me" | "info" | "projects" | "cvs"
+    "me" | "info" | "projects" | "cvs" | "dynamic_cv"
   >("me");
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const userAvatar =
     user?.avatar ||
@@ -31,12 +34,14 @@ const CandidateProfile = () => {
 
   const [profile, setProfile] = useState<ProfileState>({
     name: user?.name ?? "Loading...",
-    email: user?.email ?? "", // Auth context
-    phone: "+880 1700-000000",
+    email: user?.email ?? "",
+    phone: "01700000000",
     location: "Dhaka, Bangladesh",
     avatar: userAvatar,
     title: "Software Developer",
-    bio: "I am a passionate software developer with experience in React, Node.js, and Laravel. Always looking for new challenges and opportunities to grow.",
+    bio: "I am a passionate software developer with experience in React, Node.js, and Laravel.",
+    info: {},
+    available_attributes: [],
   });
 
   const [projects, setProjects] = useState<ProjectItem[]>([]);
@@ -51,58 +56,80 @@ const CandidateProfile = () => {
     tagsInput: "",
   });
 
- // Load Data on Mount
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const profileRes = await candidateService.getProfile();
-        
-        // profileRes.data.data 
-        if (profileRes?.data?.data) {
-          const resData = profileRes.data.data;
-          const fetchedAvatar = resData.avatar || resData.profile_photo_url;
-
-          setProfile((prev) => ({
-            ...prev,
-            ...resData, //backend data load
-            email: resData.email ?? user?.email ?? prev.email,
-            avatar: fetchedAvatar ? fetchedAvatar : prev.avatar,
-          }));
-        }
-
-        setLoadingProjects(true);
-        const projectsRes = await candidateService.getProjects();
-        if (projectsRes?.data?.data) {
-          setProjects(projectsRes.data.data);
-        }
-      } catch (error) {
-        console.error("Data load failed", error);
-      } finally {
-        setLoadingProjects(false);
-      }
-    };
-
-    loadData();
-  }, [user]);
-
- // Handle Profile Update
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Load Data Function
+  const loadData = useCallback(async () => {
     try {
-      const response = await candidateService.updateProfile(profile);
+      const profileRes = await candidateService.getProfile();
 
-      // state update
-      if (response?.data?.data) {
+      if (profileRes?.data?.data) {
+        const resData = profileRes.data.data;
+        const fetchedAvatar = resData.avatar || resData.profile_photo_url;
+
+        const rawInfo = resData.info || resData.attributes || {};
+        const normalizedInfo: Record<string | number, any> = {};
+
+        if (Array.isArray(rawInfo)) {
+          rawInfo.forEach((item: any) => {
+            const id = item.id || item.attribute_id;
+            const val = item.value ?? item.pivot?.value ?? "";
+            if (id !== undefined) {
+              normalizedInfo[id] = val;
+            }
+          });
+        } else if (typeof rawInfo === "object" && rawInfo !== null) {
+          Object.keys(rawInfo).forEach((key) => {
+            normalizedInfo[key] = rawInfo[key];
+          });
+        }
+
         setProfile((prev) => ({
           ...prev,
-          ...response.data.data,
+          ...resData,
+          info: normalizedInfo,
+          available_attributes: resData.available_attributes || prev.available_attributes || [],
+          email: resData.email ?? user?.email ?? prev.email,
+          avatar: fetchedAvatar ? fetchedAvatar : prev.avatar,
         }));
       }
 
-      toast.success("Profile updated successfully!");
+      setLoadingProjects(true);
+      const projectsRes = await candidateService.getProjects();
+      if (projectsRes?.data?.data) {
+        setProjects(projectsRes.data.data);
+      }
     } catch (error) {
-      console.error("Failed to update profile", error);
-      toast.error("Failed to update profile.");
+      console.error("Data load failed", error);
+    } finally {
+      setLoadingProjects(false);
+    }
+  }, [user]);
+
+  // Load Data on Mount
+ useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadData();
+  }, [loadData]);
+
+  // Handle Profile Update
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await candidateService.updateProfile({
+        name: profile.name,
+        title: profile.title,
+        bio: profile.bio,
+        attributes: profile.info,
+      });
+      
+      toast.success("Profile updated successfully!");
+      setIsEditing(false);
+      
+      // save and refetch
+      await loadData();
+    } catch (error: any) {
+      console.error("Laravel Validation Errors:", error.response?.data?.errors);
+      console.error("Full Error Response:", error.response?.data);
+      toast.error(error.response?.data?.message || "Failed to update profile");
     }
   };
 
@@ -233,6 +260,14 @@ const CandidateProfile = () => {
                 <i className="bi bi-file-earmark-text me-1"></i> CVs
               </button>
             </li>
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "dynamic_cv" ? "active fw-bold" : "text-dark"}`}
+                onClick={() => setActiveTab("dynamic_cv")}
+              >
+                <i className="bi bi-file-earmark-text me-1"></i> Dynamic_Cv
+              </button>
+            </li>
           </ul>
 
           {/* TAB 1: ME */}
@@ -246,11 +281,22 @@ const CandidateProfile = () => {
 
           {/* TAB 2: INFO */}
           {activeTab === "info" && (
-            <InfoTab
-              profile={profile}
-              setProfile={setProfile}
-              onSubmit={handleUpdateProfile}
-            />
+            <form onSubmit={handleUpdateProfile}>
+              <InfoTab
+                profile={profile}
+                setProfile={setProfile}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+              />
+
+              {isEditing && (
+                <div className="text-end mt-3">
+                  <button type="submit" className="btn btn-success px-4">
+                    Save Changes
+                  </button>
+                </div>
+              )}
+            </form>
           )}
 
           {/* TAB 3: PROJECTS */}
@@ -271,6 +317,15 @@ const CandidateProfile = () => {
           {activeTab === "cvs" && (
             <CvsTab
               onUpload={() => toast.success("Resume uploaded successfully!")}
+            />
+          )}
+
+          {/* TAB 5: DYNAMIC CV GENERATOR */}
+          {activeTab === "dynamic_cv" && (
+            <DynamicCvTab
+              profile={profile}
+              projects={projects}
+              hasPermission={true}
             />
           )}
         </div>
