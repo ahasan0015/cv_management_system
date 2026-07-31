@@ -1,5 +1,7 @@
 import React from 'react';
-import type { AdminTableProps } from '../../types/adminusers';
+import type { AdminTableProps } from '../../types/adminUsers';
+
+
 
 
 

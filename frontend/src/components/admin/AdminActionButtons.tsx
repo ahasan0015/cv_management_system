@@ -1,5 +1,8 @@
 import React from 'react';
-import type { AdminActionButtonsProps } from '../../types/adminusers';
+import type { AdminActionButtonsProps } from '../../types/adminUsers';
+
+
+
 
 const AdminActionButtons: React.FC<AdminActionButtonsProps> = ({
   selectedIds,

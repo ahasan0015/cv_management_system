@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
     //for local
-    baseURL: 'http://localhost:8000/api',
+    // baseURL: 'http://localhost:8000/api',
     //for server
-    // baseURL: 'https://cvmanageapi.mencareproduct.com/api',
+    baseURL: 'https://cvmanagementapi.ahasanhabibroxy.online/api',
 
     withCredentials: true,
 });

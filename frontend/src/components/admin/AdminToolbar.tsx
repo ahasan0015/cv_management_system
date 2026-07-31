@@ -1,6 +1,7 @@
 import React from 'react';
 import AdminActionButtons from './AdminActionButtons.tsx';
-import type { AdminToolbarProps } from '../../types/adminusers.ts';
+import type { AdminToolbarProps } from '../../types/adminUsers.ts';
+
 
 const AdminToolbar: React.FC<AdminToolbarProps> = ({
   searchTerm,
