@@ -42,6 +42,6 @@ class GoogleController extends Controller
         //for local
         return redirect("http://localhost:5173/auth-success?" . $queryParams);
         // for hosting
-        // return redirect("https://cvmanage.mencareproduct.com/auth-success?" . $queryParams);
+        // return redirect("https://cvmanagement.ahasanhabibroxy.online/auth-success?" . $queryParams);
     }
 }
